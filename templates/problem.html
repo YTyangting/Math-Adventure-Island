@@ -1,0 +1,204 @@
+{% extends 'dl_index.html' %}
+{# 导入自定义标签, 页面等等 #}
+{% load my_tag %}
+{% block css %}
+    <!-- editor-md样式, 保证在article.css上面 -->
+    <link rel="stylesheet" href="/static/my/css/problem.css">
+{% endblock %}
+
+{% block banner %}
+    {% banner 'problem' %}
+{% endblock %}
+{% block main %}
+    <div id="problem_position" class="problem">
+        <div class="problem_title">
+            <h2>{{id}}</h2>
+            <p>
+                <!--<span>难度：<i class="difficult">{\{ prob.difficulty }}</i></span>-->
+                <span>难度：
+                    <!-- v-show和CSS规则如 [v-cloak] { display: none } 一起用时, 不会刷新时短暂存在
+                         https://segmentfault.com/q/1010000009302077/-->
+                    <i v-show="{{ prob.difficulty }} == 0" style="color: #00b7c5" v-cloak>简单</i>
+                    <i v-show="{{ prob.difficulty }} == 1" style="color: #ffb800" v-cloak>中等</i>
+                    <i v-show="{{ prob.difficulty }} == 2" style="color: #ff2d55" v-cloak>困难</i>
+                </span>
+                <span>发布时间：<i>{{ prob.create_date|date:'Y-m-d' }}</i></span>
+                <span>来源：<i>{{ prob.origin |default_if_none:"无" }}</i></span>
+            </p>
+        </div>
+         <div class="post-content">
+             <h3>题目描述</h3>
+             <div class="lead2">
+                 <pre><code><p> {{desc}}</p>
+                 </code></pre>
+             </div>
+             <h3>解题过程格式示例</h3>
+             <div class="lead2">
+                <pre><code>x=[(8*3.5+6*3.5)*2-16]/2*1</code></pre>
+             </div>
+             <h3>解题答案格式示例</h3>
+             <div class="lead2">
+                <pre><code>45</code></pre>
+             </div>
+             <div>
+             <h3>解题过程与结果</h3>
+            <div id="simple" style="font-size:20px">
+                 
+                 <input type="button" value="["  style="width: 30px; height: 20px;">
+                 <input type="button" value="]" style="width: 30px; height: 20px;">
+                 <input type="button" value="(" style="width: 30px; height: 20px;">
+                 <input type="button" value=")" style="width: 30px; height: 20px;">
+                 <input type="button" value="*" title="乘法" style="width: 30px; height: 20px;">
+                 <input type="button" value="%" title="求余数" style="width: 30px; height: 20px;">
+                 <input type="button" value="/" title="除法" style="width: 30px; height: 20px;">
+                 <input type="button" value="-" title="减法" style="width: 30px; height: 20px;">
+                 <input type="button" value="+" title="加法" style="width: 30px; height: 20px;">
+                 <input type="button" value="." style="width: 30px; height: 20px;">
+                 <input id="calc" type="button" value="=" title="计算结果" style="width: 30px; height: 20px;">
+               </div>
+            <div id="aculate" style="font-size:20px">  
+                 
+                 <input id="zero" type="button" value="0" style="width: 30px; height: 20px;">
+                 <input type="button" value="1" style="width: 30px; height: 20px;">
+                 <input type="button" value="2" style="width: 30px; height: 20px;">
+                 <input type="button" value="3" style="width: 30px; height: 20px;">
+                 <input type="button" value="4" style="width: 30px; height: 20px;">
+                 <input type="button" value="5" style="width: 30px; height: 20px;">
+                 <input type="button" value="6" style="width: 30px; height: 20px;">
+                 <input type="button" value="7" style="width: 30px; height: 20px;">
+                 <input type="button" value="8" style="width: 30px; height: 20px;">
+                 <input type="button" value="9" style="width: 30px; height: 20px;">
+                 <input type="button" value="x" style="width: 30px; height: 20px;">
+             </div>
+            <div class="ace_editor">
+                <div id="ace_editor_body"></div>
+            </div>
+           
+        </div>
+         
+        <!-- 添加上headers这个请求头
+            https://blog.csdn.net/longtengg1/article/details/115585570-->
+        <div class="submit">
+            
+            <button class="submit_btn" @click="exectueAceCode({{ prob_nid_list }}, 'prob_submit', 'prob')">提交</button>
+        </div>
+        <div >
+             <h3>结果判断与分析</h3>
+         <div style="font-size:15px">
+            <div class="ace_result">
+            <ul class="ace_result_p">
+          <li v-for="(value, i) in ace_prob_result" :key="i">
+              {% if value.user_out != "" and value.true_out != "" %}
+                  <div>
+                 <div class="lead2"> <pre><p> 用户输出</p></pre></div>
+               
+                    <div class="dia_show_block">
+                        <pre>[[ value.user_out_detail ]]</pre>
+                        <pre>[[ value.user_out ]]</pre>
+                    </div>
+                   <div class="lead2"> <pre><p> 真实输出</p></pre></div>
+               
+                    <div class="dia_show_block">
+                        <pre>[[ value.true_out_detail ]]</pre>
+                        <pre>[[ value.true_out ]]</pre>
+                    </div>
+                  </div>
+              {% endif %}
+              <div >
+                  <pre><code><p> [[ value.msg ]]</p></code></pre>
+              </div>
+              <h2>
+                <span :class="[value.pass === 'CE'?'ce_style':'ac_style']">[[ value.pass ]]</span>
+              </h2>
+          
+          </li>
+        </ul>
+      </div>
+    </div>
+         <li v-for="(value, i) in ace_prob_result" :key="i">
+         <div class="submit">
+             <button class="submit_btn" @click="Int_analy({{ prob_nid_list }}, 'prob_submit')">智能分析</button>
+         </div>
+        </li>
+     </div>    
+         
+         <el-dialog
+      :visible.sync="resultDialogVisible"
+      width="50%"
+      :close-on-click-modal="false"
+      title="智能分析结果"
+      v-cloak>
+      <div class="ace_result">
+        <ul class="ace_result_p">
+          <li v-for="(value, i) in alyz_result" :key="i">
+            <div >
+                  <pre><code><p> [[ value.msg ]]</p></code></pre>
+              </div>
+              <div >
+                  <code><p> [[ value.aly ]]</p></code>
+              </div>
+              
+          </li>
+        </ul>
+      </div>
+      
+      <span slot="footer" class="dialog-footer">
+        <!--
+        <el-button @click="resultDialogVisible = false">取 消</el-button>
+        -->
+        <!-- 这里必须绑定resultDialogGoOn生成一个新的resultDialogGoOn, 不然写入掌握情况的Time就重复了 -->
+          
+          <el-button type="primary" @click="resultDialogVisible = false;executeDialogVisible=true">智能测试</el-button>
+          <el-button type="primary" @click="resultDialogVisible = false">返回</el-button>
+      </span>
+    </el-dialog>
+            <el-dialog
+      :visible.sync="executeDialogVisible"
+      width="50%"
+      :close-on-click-modal="false"
+   
+      title="智能测试"
+      v-cloak
+            >
+      <div class="ace_result">
+        <ul class="ace_result_p">
+          <li v-for="(value, i) in alyz_result" :key="i">
+           
+              <div >
+                  <code><p> [[ value.ques ]]</p></code>
+              </div>
+              
+          </li>
+        </ul>
+      </div>
+      
+      <span slot="footer" class="dialog-footer">
+        <!--
+        <el-button @click="resultDialogVisible = false">取 消</el-button>
+        -->
+        <!-- 这里必须绑定resultDialogGoOn生成一个新的resultDialogGoOn, 不然写入掌握情况的Time就重复了 -->
+          <el-button type="test" @click.native="executeDialogVisible=false">返回</el-button>
+      </span>
+            
+    </el-dialog>
+    
+        {% block prev_next %}
+            <div class="prev_next_prob">
+                <div class="pn_content">
+                    <!-- https://www.pythonheidong.com/blog/article/1477974/b9c3a7f3f5548da00434/
+                         my_tag.py弄一个toString过滤器, 不然后端传入的'#'会变成#, 不是字符了, 会报错
+                         多加两个a标签, 不然第一题左边没有东西, 下一题的a标签会跑到左边 -->
+                    <a v-show="{{ prev_html_name|toString }} === '#'" v-cloak>已经是第一题了</a>
+                    <a class="prev_next_btn" v-show="{{ prev_html_name|toString }} !== '#'" href="{{ prev_html_name }}" v-cloak>上一题: {{ prev_prob.title }}</a>
+                    <a class="prev_next_btn" v-show="{{ next_html_name|toString }} !== '#'" href="{{ next_html_name }}" v-cloak>下一题: {{ next_prob.title }}</a>
+                    <a v-show="{{ next_html_name|toString }} === '#'" v-cloak>做完这些你已经够强了</a>
+                    <!--<a v-show="{\{ next_html_name|toString }} === '#'">已经是最后一题了</a>-->
+                </div>
+            </div>
+        {% endblock %}
+ 
+             
+   
+ </div>
+</div>   
+{% endblock %}

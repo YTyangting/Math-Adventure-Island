@@ -1,0 +1,362 @@
+
+.problem {
+  width: 1200px;
+  position: relative;
+
+  // 自己获取下html题目的标题, 自定义加入知识点等
+  .problem_title {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: white;
+      margin-bottom: 2px;
+      border-radius: 15px 15px 0 0 ;
+
+      h2 {
+        // 上下  左右
+        margin: 10px 0;
+        font-size: 25px;
+      }
+
+      p {
+        font-size: 14px;
+        color: #333333;
+
+        span {
+          margin-right: 10px;
+          .difficult {
+            color: #dd6161;
+          }
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+
+      >div {
+        margin: 10px 0;
+        i {
+          font-size: 14px;
+          margin-right: 5px;
+          color: #409eff;
+          &:first-child {
+            color: #333333;
+          }
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  // 原HTML自带的标题设为None
+  .prob-titile {
+    display: none;
+    //height: 50px;
+    //display: flex;
+    //flex-direction: column;
+    //align-items: center;
+    //justify-content: center;
+    //background-color: white;
+    //font-size: 20px;
+    //color: #333333;
+    //font-weight: 600;
+    //// 通过伪元素构造线的样式
+    //position: relative;
+    //&:after {
+    //  display: block;
+    //  content: '';
+    //  width: 100%;
+    //  height: 1px;
+    //  background-color: #e5e5e5;
+    //  position: absolute;
+    //  bottom: 0;
+    //  left: 0;
+    //}
+}
+
+  .post-content {
+    display: block;
+    background-color: white;
+    padding: 30px;
+
+    /*h3元素与下标对应关系
+      1题目描述  3输入格式  5输出格式
+      7输入样例  9输出样例
+
+      *.lead2元素与下标对应关系
+      2题目描述  4输入格式  6输出格式
+
+      .discriptfont元素与下标对应关系
+      8输入样例  10输出样例
+    */
+    // 1题目描述
+    h3:nth-child(1){
+      font-size: 22px;
+      padding: 0 0 8px 0;  // 控制与下面线的距离
+      // 通过伪元素构造线的样式
+      position: relative;
+      &:after {
+        display: block;
+        content: '';
+        width: 100%;
+        height: 1px;
+        background-color: #e5e5e5;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+    }
+
+    // 2题目描述具体值
+    .lead2:nth-child(2){
+      padding: 30px 0;
+      pre {
+        all:initial;
+        display: block;
+        code {
+          // 有一些题目直接在code里描述题目, 没有p标签
+          // 所以这里加了一些东西
+          font-size: 16px;
+          color: black;
+          font-weight: 300;
+          img {
+            margin: 10px 30px;
+            width: 30%;
+          }
+          p {
+            font-size: 16px;
+            color: black;
+            font-weight: 300;
+          }
+        }
+      }
+    }
+
+    // 3输入格式 5输出格式 7输入样例  9输出样例
+    h3:nth-child(3), h3:nth-child(5), h3:nth-child(7), h3:nth-child(9) {
+      font-size: 16px;
+    }
+
+    // 4输入格式\6输出格式具体值
+    .lead2:nth-child(4), .lead2:nth-child(6){
+      padding: 30px 0;
+      pre {
+        all:initial;
+        display: block;
+      }
+      code {
+        font-size: 16px;
+        color: black;
+        font-weight: 300;
+      }
+    }
+
+    .discriptfont{
+      margin-top: 10px;
+      margin-bottom: 10px;
+      background-color: #f2f3f4;
+      border-radius: 5px;
+      padding: 5px 20px;
+      // box-shadow: 1px 1px 1px rgb(0 0 0 / 20%);
+
+      code {
+        display: flex;
+        align-content: center;
+        justify-items: initial;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .ace_editor {
+    width:calc(100% - 20px);
+    background-color: white;
+    margin-top: 1px;
+    padding: 10px;
+    #ace_editor_body{
+       width:100%;
+       height:300px;
+     }
+  }
+
+  .submit {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px 20px 20px;
+    background-color: white;
+    > button {
+      border: none;
+      cursor: pointer;
+      color: white;
+      border-radius: 5px;
+      margin-right: 40px;
+    }
+
+    .execute_btn {
+      width: 116px;
+      height: 32px;
+      color: #2db55d;
+      background-color: white;
+      border: 1px solid #2db55d;
+      position: relative;
+      &:hover {
+        border-color: #269a4f
+      }
+
+      // 执行代码右边一个小三角
+      &::after{
+        display: block;
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 9px;
+        width: 1px;
+        height: 1px;
+        // 给伪元素10px透明色边框
+        // border: 6px solid transparent;
+        border-top: 6px solid transparent;
+        border-left: 10px solid transparent;
+        // border-right: 10px solid transparent;
+        border-bottom: 6px solid transparent;
+        // 然后让左边有颜色
+        border-left-color: #2db55d;
+        &:hover {
+          border-left-color: #269a4f
+        }
+      }
+    }
+
+    .submit_btn {
+      width: 80px;
+      height: 32px;
+      background-color: #2db55d;
+      &:hover {
+        background-color: #269a4f
+      }
+    }
+  }
+
+  .prev_next_prob {
+    background-color: white;
+    padding: 20px;
+    border-radius: 0 0 15px 15px;
+
+    .pn_content {
+      border-top: 1px solid #f0eeee;
+      width: 100%;
+      padding-top: 5px;
+      display: flex;
+      justify-content: space-between;
+
+      // a标签整体样式
+      a {
+        color: #333333;
+      }
+      // 上一题下一题a标签单独样式
+      .prev_next_btn {
+        &:hover {
+          color: #26c6da;
+        }
+      }
+    }
+  }
+}
+
+/*.result_dialog {
+  position: relative;
+
+  >h2{
+    font-size: 25px;
+    font-weight: 800;
+    position: absolute;
+    top: -45px;
+    left: 0;
+  }
+
+  >ul {
+     // 就是结果对话框里的ul标签
+     list-style: none;
+     padding: 0 10px;
+
+     >li {
+       margin-bottom: 10px;
+       padding: 10px 10px;
+
+       &:last-child {
+         margin-bottom: 0;
+       }
+     }
+  }
+}*/
+
+.el-dialog__header {
+  // 通过伪元素构造线
+  position: relative;
+  &:after {
+    display: block;
+    content: '';
+    width: 95%;
+    height: 1px;
+    background-color: #e5e5e5;
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+  }
+
+  .el-dialog__title {
+    font-size: 24px;
+  }
+}
+
+.el-dialog__body {
+  padding: 10px 10px;
+}
+
+.ace_result {
+  >ul {
+     // 就是结果对话框里的ul标签
+     list-style: none;
+
+     >li {
+       margin-bottom: 10px;
+
+       >div {
+         margin-bottom: 10px;
+         display: flex;
+         justify-content: flex-start;
+         align-content: flex-start;
+         flex-wrap: wrap;
+         flex-direction: column;
+         align-items: flex-start;
+         h2 {
+          margin-bottom: 10px;
+         }
+
+         .dia_show_block {
+           background-color: #f2f3f4;
+           border-radius: 5px;
+           width: 100%;
+
+           >div {
+             padding: 10px 10px;
+           }
+         }
+       }
+
+       &:last-child {
+         margin-bottom: 0;
+       }
+
+       h2 {
+         // problem界面提交结果 / test界面提交试卷样式
+         .ce_style {
+           color: red;
+         }
+         .ac_style {
+           color: green;
+         }
+       }
+     }
+  }
+}
+

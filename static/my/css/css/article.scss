@@ -1,0 +1,315 @@
+.article {
+  width: 1200px;
+  position: relative;
+
+  .slider_bar {
+    width: calc(250px - 40px);
+    //height: 200px;
+    background-color: white;
+    border-radius: 5px;
+    position: absolute;
+    top: 0;
+    left: -270px;
+    padding: 20px;
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .body {
+      font-size: 16px;
+      p {
+        transition: all 0.3s;
+        cursor: pointer;
+        height: 30px;
+        // 行高
+        line-height: 30px;
+        white-space: nowrap;  // normal禁止文字换行 initial换行显示
+        overflow: hidden;  // 超出部分不显示
+        text-overflow: ellipsis;  // 文本溢出时显示省略号
+
+        &:hover {
+          color: white;
+          background-color: #409eff;
+        }
+
+        &.H1 {
+
+        }
+
+        &.H2 {
+          padding-left: 10px;
+        }
+
+        &.H3 {
+          padding-left: 15px;
+        }
+
+        &.H4 {
+          padding-left: 20px;
+        }
+
+        &.H5 {
+          font-size: 14px;
+          padding-left: 20px;
+        }
+
+        &.H6 {
+          font-size: 12px;
+          padding-left: 20px;
+        }
+      }
+    }
+  }
+
+  .article_title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+
+    h2 {
+      // 上下  左右
+      margin: 10px 0;
+    }
+
+    p {
+      font-size: 14px;
+      color: #333333;
+
+      span {
+        margin-right: 10px;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+
+    >div {
+      margin: 10px 0;
+      i {
+        font-size: 14px;
+        margin-right: 5px;
+        color: #409eff;
+        &:first-child {
+          color: #333333;
+        }
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  .article_content {
+    margin-top: 2px;
+    min-height: 200px;
+    background-color: white;
+    width: calc(100% - 40px);
+  }
+
+  .comment_submit {
+    margin-top: 20px;
+    min-height: 200px;
+    background-color: white;
+    padding: 20px 20px 10px 20px;
+
+    .title {
+      // 想让这根线离远一点, 但是border是不算margin的, 所以需要一个padding
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #f0eeee;
+      color: #555555;
+      position: relative;
+
+      // 通过伪元素构造线的样式
+      &:after {
+        display: block;
+        content: '';
+        width: 145px;
+        height: 1px;
+        background-color: #333333;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+    }
+
+    .body {
+      width: calc(100% - 40px);
+      padding: 20px;
+      height: 150px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      box-shadow: inset 2px 2px 6px rgb(0 0 0 / 8%);
+      position: relative;
+
+      textarea {
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        border: none;
+        resize: none;
+
+        &:focus {
+          border: none;
+          outline: none;
+        }
+      }
+
+      >button {
+        width: 100px;
+        height: 40px;
+        border-radius: 10px;
+        background-color: #409eff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+
+    .footer {
+      font-size: 14px;
+      color: #333333;
+      margin-top: 10px;
+      p > span {
+        color: #409eff;
+      }
+    }
+  }
+
+  .comment_list {
+    margin-top: 20px;
+
+    >ul {
+      // 去掉ul默认样式
+      list-style: none;
+
+      >li {
+        width: 100%;
+        display: flex;
+        margin-bottom: 20px;
+
+        // 这里用子类选择器, 因为sub_comment_list里也有left和right
+        >.left {
+          width: 70px;
+
+          img {
+            width: 50px;
+            border-radius: 5px;
+            transition: all 0.3s;
+
+            &:hover {
+              transform: scale(1.1);
+            }
+          }
+        }
+
+        // 这里用子类选择器, 因为sub_comment_list里也有left和right
+        >.right {
+          // 减去头像70px以及padding左右各20px
+          width: calc(100% - 70px - 40px);
+          background-color: white;
+          border-radius: 5px;
+          position: relative;
+          // 阴影效果  向下向右位移, 弥散程度, 颜色黑色透明度高
+          box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+          padding: 10px 20px;
+
+          // 左边和头像之间的一个小三角
+          &::after{
+            display: block;
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 15px;
+            width: 1px;
+            height: 1px;
+            border: 10px solid transparent;
+            border-right-color: white;
+          }
+
+          h4 {
+            color: #f87197;
+          }
+
+          .comment_content {
+            margin: 5px 0;
+
+            img {
+              margin-top: 5px;
+              margin-right: 10px;
+              height: 120px;
+              border-radius: 5px;
+              box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+            }
+          }
+
+          .comment_info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+
+            >span {
+              color: #b3b8b9;
+            }
+
+            >div >span {
+              cursor: pointer;
+            }
+          }
+
+          .delete {
+            color: #dd6161;
+            cursor: pointer;
+          }
+
+          .sub_comment_list {
+            margin-top: 10px;
+
+            >div {
+              display: flex;
+              margin-bottom: 10px;
+              .left {
+                width: 60px;
+
+                img {
+                  width: 40px;
+                  border-radius: 5px;
+                  transition: all 0.3s;
+
+                  &:hover {
+                    transform: scale(1.1);
+                  }
+                }
+              }
+
+              .right {
+                width: calc(100% - 60px);
+
+                .sub_comment_content {
+                  margin: 5px 0;
+                }
+
+                .sub_comment_info {
+                  display: flex;
+                  justify-content: space-between;
+                  font-size: 14px;
+
+                  >div >span {
+                    cursor: pointer;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

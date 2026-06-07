@@ -1,0 +1,26 @@
+// 这里的都是作用到全局的
+body {
+  margin: 0;
+}
+
+// 全局a标签默认样式
+a {
+  text-decoration: none;
+  color: #00aeec;
+}
+
+// 去除footer里的p标签默认样式
+p {
+  margin: 0;
+}
+
+// 去除主体card里的h标签默认样式
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+// 去除标签云里的ul标签默认样式
+ul {
+  padding: 0;
+  margin: 0;
+}

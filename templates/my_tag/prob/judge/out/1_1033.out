@@ -1,0 +1,14 @@
+Date is Constructed: 2000-1-1
+Date is Constructed: 2018-9-1
+Person is Constructed: aaa
+Date is Constructed: 2000-1-2
+Date is Constructed: 2018-9-2
+Person is Constructed: bbb
+aaa 2000-1-1 2018-9-1
+bbb 2000-1-2 2018-9-2
+Person is Deconstructed: bbb
+Date is Deconstructed: 2018-9-2
+Date is Deconstructed: 2000-1-2
+Person is Deconstructed: aaa
+Date is Deconstructed: 2018-9-1
+Date is Deconstructed: 2000-1-1

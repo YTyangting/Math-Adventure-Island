@@ -1,0 +1,59 @@
+<div class="post">
+ <div class="prob-titile">
+  uncle-lu的超算中心
+ </div>
+ <div class="post-content">
+  <h3>
+   题目描述
+  </h3>
+  <div class="lead2">
+   <pre><code><p>由于自身设备算力不足，uncle-lu希望在NNU建立一座超级计算机中心，身为电院的他着手设计和绘制超算中心的图纸，有些小细节他想咨询你一下。</p>
+
+<p>uncle-lu希望超算中心建成圆环形，圆环形被分成两部分——内环与外环，其中内环与外环间没有墙壁，但是每个环中会被分割出不同的房间，各自环内的房间之间会修筑墙壁，uncle-lu从12点钟方向开始分割房间（所以12点钟方向会有墙壁），效果如图。为了方便设置房间号，内环记作1号环，外环被记作2号环，不同房间的编号从12点钟方向开始顺时针依次从1开始编号，效果如图所示。我们用一个有序数对来表示一间房间的位置，第一个数为环号，第二个数为房间号。如内环的第3间房我们可以用“(1,3)”表示。</p>
+
+<p>内环和外环放置的计算机类型不同，由于财力有限，内环uncle-lu只能分割出n间机房，外环只能分割出m间机房。</p>
+
+<p><img src="http://codeforces.com/predownloaded/9e/12/9e12655e7ea9e6bff7c9bb3bb0e768a502ecba75.png"/></p>
+
+<p>uncle-lu希望知道，他的超算中心，给定的两间房是否能互相到达。好奇的uncle-lu有q组疑问。</p>
+
+<p>数据范围:</p>
+
+<p>对于100%的数据:  1 &lt;= n,m &lt;= 10^9, 1 &lt;= q &lt;= 10^4<br/>
+(保证数据给出的房间均存在.)</p>
+</code></pre>
+  </div>
+  <h3>
+   输入格式
+  </h3>
+  <div class="lead2">
+   <pre><code>第一行包含3个正整数，分别为 n, m, q ——内环分割出的房间数，外环能分割出的房间数，uncle-lu的疑问组数。
+接下来q行，对于每一行包含4个正整数 x, y, a, b, 分别表示(x,y)房间与(a,b)房间，询问这两个房间是否能互相到达。
+</code></pre>
+  </div>
+  <h3>
+   输出格式
+  </h3>
+  <div class="lead2">
+   <pre><code>对于每组询问，如果两房间能互相到达输出"YES"(不带双引号)，如果两房间不能互相到达输出"NO"(不带双引号)。每组询问间请用回车分隔。
+</code></pre>
+  </div>
+  <h3>
+   输入样例
+  </h3>
+  <div class="discriptfont sampleboard" id="sampleInputContent1">
+   <pre><code>4 6 3
+1 1 2 3
+2 6 1 2
+2 6 2 4</code></pre>
+  </div>
+  <h3>
+   输出样例
+  </h3>
+  <div class="discriptfont sampleboard" id="sampleOutputContent1">
+   <pre><code>YES
+NO
+YES</code></pre>
+  </div>
+ </div>
+</div>

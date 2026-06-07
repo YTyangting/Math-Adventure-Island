@@ -1,0 +1,72 @@
+@charset "UTF-8";
+main {
+  width: calc(100% - 240px);
+  /* 100%的窗口高度 */
+  height: calc(100vh - 40px);
+  padding: 20px 120px;
+  background-color: var(--main_bg);
+  color: var(--main_color);
+  position: relative;
+  /* 渐变背景 */
+}
+main .welcome_body {
+  background-color: transparent;
+  height: calc(70vh - 40px);
+  width: 70%;
+  border-radius: 5px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  /* 绝对定位 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+}
+main .welcome_body h1 {
+  margin-top: 100px;
+  text-align: center;
+  margin-bottom: 5px;
+  font-size: 40px;
+  /* 大写字母 */
+  text-transform: uppercase;
+  color: #d3b7d8;
+  /* 字间距 */
+  letter-spacing: 5px;
+}
+main .welcome_body h2 {
+  color: #8e9aaf;
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-align: center;
+  margin-bottom: 80px;
+}
+main .welcome_body p {
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: #8e9aaf;
+  text-align: center;
+}
+main .welcome_body span {
+  color: #d3b7d8;
+}
+main .welcome_body button {
+  margin-top: 60px;
+  width: 20%;
+  height: 55px;
+  background-color: #f4cdcd;
+  outline: none;
+  border-radius: 8px;
+  padding: 13px;
+  color: #a262ad;
+  font-size: 23px;
+  text-align: center;
+  letter-spacing: 2px;
+  border: none;
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=welcome.css.map */

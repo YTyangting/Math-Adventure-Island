@@ -1,0 +1,418 @@
+@charset "UTF-8";
+.pager {
+  list-style: none;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.pager > li {
+  width: 34px;
+  height: 34px;
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid #e3e5e7;
+  transition: all 0.3s;
+  margin-right: 10px;
+}
+.pager > li:last-child {
+  margin-right: 0;
+}
+.pager > li a {
+  width: 100%;
+  height: 100%;
+  color: black;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+.pager > li:hover {
+  background-color: #e3e5e7;
+}
+.pager .page_up, .pager .page_down, .pager .page_first, .pager .page_last {
+  width: 74px;
+}
+.pager > li.active {
+  background-color: #00aeec;
+}
+.pager > li.active a {
+  color: white;
+}
+
+@font-face {
+  font-family: "UnidreamLED";
+  src: url(../font/UnidreamLED.eot);
+  /***兼容ie9***/
+  src: url(../font/UnidreamLED.eot?#iefix) format("embedded-opentype"), url("../font/UnidreamLED.woff") format("woff"), local("UnidreamLED"), url("../font/UnidreamLED.woff");
+  /***默认使用本地的***/
+}
+footer {
+  height: 130px;
+}
+
+.card .title {
+  border-radius: 15px 15px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f5f5f5;
+  padding: 20px 20px 10px 20px;
+  background-color: white;
+}
+.card .title h2 {
+  font-size: 20px;
+}
+.card .title > div a {
+  font-size: 14px;
+}
+.card .body {
+  border-radius: 0 0 15px 15px;
+  padding: 10px 20px 20px 20px;
+  background-color: white;
+}
+
+#app {
+  width: 100%;
+}
+#app .main {
+  width: 1200px;
+  min-height: 200px;
+  display: flex;
+  justify-content: space-between;
+}
+#app .main > div > div {
+  margin-bottom: 20px;
+}
+#app .main .left {
+  width: 74%;
+}
+#app .main .left .boutique_article > .title {
+  border-bottom: 1px solid #f5f5f5;
+  /*.switch_article_category{
+    span {
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: all 0.3s;
+
+      &:hover {
+        color: #409eff;
+      }
+
+      // 根据是否有动态属性active, 来改变span文本颜色
+      &[active] {
+        color: #409eff;
+      }
+    }
+  }*/
+}
+#app .main .left .boutique_article > .title a {
+  font-size: 25px;
+  font-weight: 500;
+  cursor: pointer;
+  color: black;
+}
+#app .main .left .boutique_article > .title a:hover {
+  color: #00aeec;
+}
+#app .main .left .boutique_article > .body {
+  /* // 上下  左右
+  padding: 0 20px;
+  >ul {
+    display: flex;
+    flex-wrap: wrap;
+
+    >li {
+      width: 50%;
+      box-sizing: border-box;
+      display: flex;
+      // 上下  左右
+      padding: 10px 0;
+
+      &:nth-child(1), &:nth-child(3), &:nth-child(5) {
+        border-right: 1px solid #f0eeee;
+        // 此处不应该给right加padding
+        // 因为下面2、4、6是给li加的padding,
+        // 这里给right加的话会导致左右两个li里面的图片大小不一样
+        // right大小也不一样了, 应该作用在同级元素才能保持一致
+        padding: 10px 10px 10px 0;
+        //.right {
+        //  padding-right: 10px;
+        //}
+      }
+      &:nth-child(2), &:nth-child(4), &:nth-child(6) {
+        padding: 10px 0 10px 10px;
+      }
+      &:nth-child(1), &:nth-child(2), &:nth-child(3), &:nth-child(4) {
+        // 有这个属性box-sizing: border-box;, 不用担心border-bottom打乱布局
+        // 不过其实应为加了这个, 左边li里面的right略小于右边li的right, 不过没有太大影响
+        border-bottom: 1px solid #f0eeee;
+      }
+
+      .left {
+        width: 40%;
+
+        // 给img再套一层div固定高度, 然后超出部分隐藏
+        >div {
+          width: 100%;
+          height: 80px;
+          overflow: hidden;
+        }
+
+        img {
+          width: 100%;
+          // 通过下面两句, 实现鼠标移上去图片放大
+          // 又因为给img套了一层固定高度的div, 并将超出部分隐藏, 所以组件大小不会改变
+          transition: all 0.3s;
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+      }
+
+      .right {
+        width: 60%;
+        padding-left: 10px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        h2 {
+          font-size: 20px;
+          a {
+            color: #333333;
+
+          }
+        }
+
+        // 单行文本截断
+        p {
+          overflow: hidden;
+          white-space: nowrap;  // 多行状态下不换行
+          text-overflow: ellipsis;
+          span {
+            &:first-child {
+              margin-right: 13px;
+            }
+          }
+        }
+
+        >div {
+          i {
+            font-size: 14px;
+            margin-right: 5px;
+            color: #409eff;
+            &:first-child {
+              color: #333333;
+            }
+            &:last-child {
+              margin-right: 0;
+            }
+          }
+        }
+
+        span {
+          font-size: 14px;
+          color: #555;
+        }
+      }
+    }
+  }*/
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 30px;
+}
+#app .main .left .boutique_article > .body .left {
+  width: 50%;
+  height: 300px;
+  background-color: white;
+  border-radius: 15px;
+  margin-right: 10px;
+  border: 2px solid #f5f5f5;
+}
+#app .main .left .boutique_article > .body .right {
+  width: 50%;
+  height: 300px;
+  background-color: white;
+  border-radius: 15px;
+  border: 2px solid #f5f5f5;
+}
+#app .main .left .all_article > .title > a {
+  font-size: 25px;
+  font-weight: 500;
+  cursor: pointer;
+  color: black;
+}
+#app .main .left .all_article > .title > a:hover {
+  color: #00aeec;
+}
+#app .main .left .all_article > .body {
+  background-color: transparent;
+  padding: 0;
+}
+#app .main .left .all_article > .body .article_content_ul {
+  width: 100%;
+}
+#app .main .left .all_article > .body .article_content_ul > li {
+  width: 100%;
+  display: flex;
+  background-color: white;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+}
+#app .main .left .all_article > .body .article_content_ul > li:first-child {
+  border-radius: 0 0 15px 15px;
+}
+#app .main .left .all_article > .body .article_content_ul > li:first-child .left {
+  padding: 10px 10px 20px 20px;
+}
+#app .main .left .all_article > .body .article_content_ul > li:first-child .right {
+  padding: 10px 20px 20px 10px;
+}
+#app .main .left .all_article > .body .article_content_ul > li .tigao {
+  position: absolute;
+  color: white;
+  top: 9px;
+  right: -79px;
+  width: 200px;
+  height: 20px;
+  font-size: 14px;
+  background-color: #dd6161;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotate(45deg);
+}
+#app .main .left .all_article > .body .article_content_ul > li .buruo {
+  position: absolute;
+  color: white;
+  top: 9px;
+  right: -79px;
+  width: 200px;
+  height: 20px;
+  font-size: 14px;
+  background-color: #b061dd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotate(45deg);
+}
+#app .main .left .all_article > .body .article_content_ul > li .left {
+  width: 30%;
+  box-sizing: border-box;
+  padding: 20px 10px 20px 20px;
+}
+#app .main .left .all_article > .body .article_content_ul > li .left > div {
+  width: 100%;
+  height: 110px;
+  overflow: hidden;
+  border-radius: 15px;
+}
+#app .main .left .all_article > .body .article_content_ul > li .left img {
+  width: 100%;
+  transition: all 0.3s;
+}
+#app .main .left .all_article > .body .article_content_ul > li .left img:hover {
+  transform: scale(1.1);
+}
+#app .main .left .all_article > .body .article_content_ul > li .right {
+  width: 70%;
+  padding: 20px 20px 20px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  /*>a {
+    width: 100px;
+    height: 30px;
+    // 在其父组件right使用relative定位
+    // 在这里使用absolute定位
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    background-color: #409eff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+  }*/
+}
+#app .main .left .all_article > .body .article_content_ul > li .right > h2 {
+  font-size: 23px;
+  margin-bottom: 5px;
+}
+#app .main .left .all_article > .body .article_content_ul > li .right > h2 a {
+  color: black;
+}
+#app .main .left .all_article > .body .article_content_ul > li .right > h2 a:hover {
+  color: #00aeec;
+}
+#app .main .left .all_article > .body .article_content_ul > li .right > p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
+}
+#app .main .left .all_article > .body .article_content_ul > li .right .article_info {
+  font-size: 14px;
+  color: #555;
+}
+#app .main .left .all_article > .body .article_content_ul > li .right .article_info > span {
+  margin-right: 10px;
+}
+#app .main .left .all_article > .body .article_content_ul > li .right .article_info > span i {
+  margin-right: 5px;
+}
+#app .main .right {
+  width: 25%;
+}
+#app .main .right .advertisement > .body {
+  min-height: 200px;
+  padding: 20px 40px;
+}
+#app .main .right .show_time {
+  background-color: white;
+  padding: 15px;
+  border-radius: 15px;
+}
+#app .main .right .show_time .hexo_electric_clock {
+  position: relative;
+  width: calc(100% - 40px);
+  height: 100%;
+  background: #eaeaea;
+  color: black;
+  font-size: 16px;
+  line-height: 1.5;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: inset 0 0 9px 9px #ccc;
+}
+#app .main .right .show_time .hexo_electric_clock .clock-row {
+  font-family: "UnidreamLED";
+  font-weight: 400;
+  color: #000;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+#app .main .right .show_time .hexo_electric_clock .clock-row .card-clock-time {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 38px;
+}
+
+/*# sourceMappingURL=dl_index.css.map */

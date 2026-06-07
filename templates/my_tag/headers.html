@@ -1,0 +1,11 @@
+<header>
+    <div class="title">
+        <h1>Hello <br> Math</h1>
+        <P>{{ test_str |safe}}</P>
+    </div>
+    {% for img in img_list %}
+        <div class="dynamic_shuffl">
+            <img src="{{ img }}">
+        </div>
+    {% endfor %}
+</header>

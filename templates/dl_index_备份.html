@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+{# 导入自定义标签, 页面等等 #}
+{% load my_tag %}
+<head>
+    <meta charset="UTF-8">
+    <title>平台</title>
+    <!--  此处远程链接有问题,
+          必须手动上传.scss下的.css和.map文件  -->
+    <link rel="stylesheet" href="/static/my/css/base.css">
+    <link rel="stylesheet" href="/static/my/css/reset.css">
+    {% block css %}
+        <!-- 把自己这个dl_index样式放在base下面, 修改一些footer高度等 -->
+        <link rel="stylesheet" href="/static/my/css/dl_index.css">
+    {% endblock %}
+    <!-- 图标库样式引入 -->
+    <link rel="stylesheet" href="/static/fontawesome-free-5/css/all.min.css">
+    <!-- 引入element ui样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="/static/vue/vue.js"></script>
+    <!-- 引入element ui组件库, 一定要放到vue下面 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+<!-- VUE -->
+<div id="app">
+    <!-- link不只能写在head里, 在此处更换主题 -->
+    <link rel="stylesheet" :href="'/static/my/css/theme/' + theme +'.css'">
+    <!-- 顶部导航栏 -->
+    <nav class="nav_bg">
+        <div class="left">
+            <a href="/dl_index">首页</a>
+            <a href="/problemset">题库</a>
+            <el-dropdown>
+              <span class="el-dropdown-link">
+                  测验<i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item><a href="/test/?type=weakness">补弱测验</a></el-dropdown-item>
+                <el-dropdown-item><a href="/test/?type=improve">提高测验</a></el-dropdown-item>
+                <el-dropdown-item><a href="/test/?type=common">普通测验</a></el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <a href="/report/">报告</a>
+            <el-dropdown>
+              <span class="el-dropdown-link">
+                  模拟<i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item><a href="/simulation/?type=1">模拟试卷一</a></el-dropdown-item>
+                <!--<el-dropdown-item><a href="/simulation/?type=2">模拟试卷二</a></el-dropdown-item>
+                <el-dropdown-item><a href="/simulation/?type=3">模拟试卷三</a></el-dropdown-item>-->
+              </el-dropdown-menu>
+            </el-dropdown>
+            <!--<a href="#">做题记录</a>-->
+        </div>
+        <div class="right">
+            <img v-show="theme === 'light'" src="/static/my/img/nav/light.svg" @click="setTheme('dark')" alt="">
+            <img v-show="theme === 'dark'" src="/static/my/img/nav/dark.svg"  @click="setTheme('light')" alt="">
+
+            <!-- 在登录或注册后执行了auth.login(request, user),
+                 把user加入到了request里,
+                 所以只要从views.index函数里传来request即可获取用户名
+             -->
+            <!--  如果登录了, 就一定会有username,
+                  注意此处不能用request.user, 注销了这个字段还是有的,
+                  但是username没了
+             -->
+            {% if request.user.username %}
+                <el-dropdown>
+                  <span class="el-dropdown-link">
+                    {{ request.user.username }}<i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item><a href="#">个人中心</a></el-dropdown-item>
+                    <el-dropdown-item><a href="/logout">注销退出</a></el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+            {% else %}
+                <a href="/login">登录</a>
+                <a href="/sign">注册</a>
+            {% endif %}
+        </div>
+    </nav>
+    <!-- 内容主体 -->
+    {% block banner %}
+        <!-- 自定义标签, 接收参数'index' -->
+        {% banner 'index' %}
+    {% endblock %}
+    <main>
+        <!-- 获取django安全验证的token放在外面, 其它的html都可以继承到 -->
+        {% csrf_token %}
+        {% block main %}
+            <div class="main">
+                <div class="left">
+                    <div class="boutique_article card">
+                        <div class="title">
+                            <a href="/report/">学习报告</a>
+                        </div>
+                        <div class="body">
+                            <!-- 此处没用类选择器生成样式, 所以可以样式不同 -->
+                            <div class="left">
+                                <!--<div id="left_chart" style="width: 400px;height:300px;"></div>-->
+                                <div id="test_concept_pie_charts_option" style="width: 400px;height:300px;"></div>
+                            </div>
+                            <div class="right">
+                                <!--<div id="right_chart" style="width: 400px;height:300px;"></div>-->
+                                <div id="test_concept_radar_charts_option" style="width: 400px;height:300px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="position" class="all_article card">
+                        <div class="title">
+                            <a href="#">推荐题目</a>
+                        </div>
+                        <div class="body">
+                            <ul class="article_content_ul">
+                                <!-- 一篇篇的文章, 放在ul这个无序list里 -->
+                                {% for prob_reco in prob_query %}
+                                    <li>
+                                        <!-- 目前还不知道怎么用class三元组赋值多个类属性category_flag -->
+                                        <div
+                                         len="2" type="后端"
+                                         :class="[{{ prob_reco.category }} === 2?'buruo':'tigao']">
+                                            <!-- 自定义了一个过滤器来获取choice值 -->
+                                            {{ prob_reco|displayName:'category' }}
+                                        </div>
+                                        <div class="left">
+                                            <div>
+                                                <img src="/media/article_img/7.jpg">
+                                            </div>
+                                        </div>
+                                        <div class="right">
+                                            <!-- 每道题目的nid是唯一的, 在problem里根据nid查到对应html就可以了
+                                                 在url后面加了GET请求参数, 根据GET参数不同,
+                                                 上一题下一题范围就应该不同(整个题库里还是只在推荐题目里)
+                                                 a标签href属性的url最前面加上/直接从根目录跳转-->
+                                            <h2><a href="/problem/{{  prob_reco.problem.nid }}?from=recommend#problem_position">{{  prob_reco.problem.title }}</a></h2>
+                                            <p>
+                                                {{ prob_reco.problem.desc }}
+                                            </p>
+                                            <div class="article_info">
+                                                <span>
+                                                    <i class="far fa-clock"></i>{{ prob_reco.problem.create_date|date:'Y-m-d' }}
+                                                </span>
+                                                <span>
+                                                    通过次数：{{  prob_reco.problem.pass_count }}
+                                                </span>
+                                                <span>
+                                                    提交次数：{{  prob_reco.problem.submit_count }}
+                                                </span>
+{#                                                <span>#}
+{#                                                    <i class="fas fa-comments"></i>231#}
+{#                                                </span>#}
+{#                                                <span>#}
+{#                                                    <i class="fas fa-star-half-alt"></i>231#}
+{#                                                </span>#}
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <ul class="pager">
+                                {{ pager.page_html|safe }}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="right">
+                    <!--<div class="advertisement card">
+                        <div class="title">
+                            <h2>个人中心</h2>
+                            <div>
+                                <a href="#">申请</a>
+                            </div>
+                        </div>
+                        <div class="body">
+{#                            main content#}
+                            <ul>To Do List
+                                <li>题目上传下载</li>
+                                <li>报告展示</li>
+{#                                <li>题目搜索</li>#}
+                                <li>个人中心</li>
+                                <li>
+                                    test做题和problem界面普通做题, 两者生成的做题记录是分开的, 这也符合常理, 平时和考试即使一样的题也不同感觉
+                                    把report和test的推荐题目统一一下, app01的problem和dl_index的origin=None修改一下
+                                    题目界面实现上一题下一题功能,
+                                    读取当前类别的题目, 得到一个list,
+                                    定位到相应的题目, 找到它的上一题下一题
+                                </li>
+
+                                <li>===== 没能实现下拉加载但是实现了点击index显示每一题
+                                    测试界面实现下拉加载,
+                                    悬浮目录定位到每一题(#position锚点, 15个小方格子, 哪一题上传了方格为绿色背景),
+                                    下拉加载主要是想让他们在同一个页面, 不需要考虑组件通信, 维护一个共享list
+                                    在mounted里初始化时会和首页报告图冲突, 考虑把两个script分开
+                                </li>
+
+                                <li>数据库: 用户、题目、做题记录、知识点</li>
+                            </ul>
+                        </div>
+                    </div>-->
+                    <div class="show_time card" v-cloak>
+                        <div class="hexo_electric_clock">
+                          <div class="clock-row">
+                            <span id="card-clock-clockdate" class="card-clock-clockdate">2022-07-17</span>
+                              <span class="card-clock-weather">[[ clockCardInfo.whether ]]</span>
+                              <span id="card-clock-temperature" v-cloak>[[ clockCardInfo.temperature ]]</span>
+                            <!--<span class="card-clock-humidity">☀️💧 [[ clockCardInfo.humidity ]]</span>-->
+                          </div>
+                          <div class="clock-row">
+                              <div class="card-clock-time">
+                                  <span id="card-clock-time">18:48:06</span>
+                              </div>
+                          </div>
+                          <div class="clock-row">
+                            <span class="card-clock-ip">[[ clockCardInfo.ip ]]</span>
+                            <span class="card-clock-location">[[ clockCardInfo.location ]]</span>
+                            <span id="card-clock-darkorlight" class="card-clock-darkorlight">
+                                PM
+                            </span>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </main>
+    <!-- 底部信息栏 -->
+    <footer>
+        <div class="left">
+            <p class="version">
+                <span>version</span>
+                <span>1.0.0</span>
+            </p>
+            <p>
+                <span>建站日期: 2022-5-22</span>
+            </p>
+        </div>
+        <div class="right">
+            <div class="contact">
+                <div>
+                    <img class="svg" src="/static/my/img/footer/qq_icon.svg">
+                    <img class="qq" src="/static/my/img/footer/qq.png">
+                </div>
+                 <div>
+                     <a href="https://www.bilibili.com/" target="_blank">
+                         <img class="svg" src="/static/my/img/footer/bilibili_icon.svg">
+                     </a>
+                </div>
+            </div>
+            <p>
+                联系邮箱: aaaaa@qq.com<!--liu_yazhou2356@163.com-->
+            </p>
+        </div>
+    </footer>
+</div>
+<script src="/static/axios/axios.min.js"></script>
+<script src="/static/echarts/echarts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ext-language_tools.js" type="text/javascript"></script>
+<!-- 代码编辑ace.js  本地-->
+{#<script src="/static/ace/src-min/ace.js" type="text/javascript"></script>#}
+{#<script src="/static/ace/src-min/ext-language_tools.js" type="text/javascript"></script>#}
+<script>
+    // axios的请求前拦截器, 或者说中间件
+    axios.interceptors.request.use(request => {
+        {#console.log(request)#}
+        {#request.headers.Authorization = window.sessionStorage.getItem('token')#}
+        if (request.method === 'post' || request.method === 'get'){
+            // 首先获取name为csrfmiddlewaretoken的input,
+            // 就是上面html代码的这个{ % csrf_token % }',
+            // 然后获取其value值, 即token值
+            let csrftoken = document.querySelector('input[name="csrfmiddlewaretoken"]').value
+            {#console.log(csrftoken)#}
+            // 最后在每次post请求时, 在请求头加上这个csrftoken
+            request.headers['X-CSRFToken'] = csrftoken
+        }
+        return request  // 最后一定要返回, 把请求发出去
+    })
+    // axios的响应中间件
+    axios.interceptors.response.use(response => {
+        // 啥都不做直接return
+        return response
+    })
+    new Vue({
+        el: '#app',
+        // 将vue的插值改成[[]]
+        delimiters: ["[[", "]]"],
+        data: {
+            theme: 'light', // 默认主题
+            // =====题库列表数据===== //
+            queryInfo: {
+                // 查询参数
+                query: '',
+                // 当前页码
+                pagenum: 1,
+                // 每页显示条数
+                pagesize: 5
+            },
+            // 题库知识点标签样式
+            knowledge_tag_type: ['error', 'success', 'warning'],
+            probList: [],
+            total: 0,
+            // 请求头
+            headerObj: {'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value},
+            // =====测试上传列表===== //
+            show_prob_index: 0,
+            // =====执行结果对话框===== //
+            executeDialogVisible: false,
+            // =====做题界面提交/提交试卷结果对话框===== //
+            resultDialogVisible: false,
+            // =====ACE结果===== //
+            editor: '',  // ace编辑器
+            editorValue: '',  // ace编辑器文本内容
+            ace_prob_result: '',  // 返回的做题结果 list, 其实不用list的
+            ace_time_stamp: '',  // 做题/测验时间记录
+            ace_submit_result_list: new Array({{ count }}).fill(0),  // 题目提交情况  list
+            // 记录每一题对应的ace值
+            // 没写题目后端报错write() argument must be str, not int
+            // 所以初始值改为''
+            prob_editorValue: new Array({{ count }}).fill(''),
+            // =====Report Data===== //
+            user_prob_pie_charts_option: '', // 用户已做题目饼图形式1
+            user_prob_polar_charts_option: '', // 用户已做题目饼图形式2
+            test_concept_radar_charts_option: '', // 用户知识点掌握情况雷达图
+            test_concept_pie_charts_option: '', // 用户知识点掌握情况饼图
+            user_concept_line_charts_option: '', // 用户知识点掌握情况折线图
+            prob_word_data: '',
+            center_word_data: '',
+            bottom_word_data: '',
+            // =====element ui 加载动画  加到了提交试卷按钮上===== //
+            fullscreenLoading: false,  // element ui指令方式加载动画
+            fullscreenLoading_service: null,  // element ui服务器方式加载动画
+            // report界面下拉选择框选项
+            report_select_options: [],
+            // report界面下拉选择框当前选中值
+            report_select_value: '选项2',
+            // 时钟
+            clockCardInfo: {
+                whether: 'SUN',
+                temperature: '9℃',
+                humidity: '67%',
+                ip: '223.2.19.26',
+                location: 'notfound',
+            },
+            // 模拟测试计时器
+            // 以秒计时的总测试时间, setInterval定时器里先减了1, 所以此处加1
+            remainSimulationTime: 6 * 60 * 60 + 1,
+            showRemainSimulationTime: '06 : 00 : 00',
+            prob_nid_list: '',
+        },
+        created() {
+            // 刷新后会调用此方法
+            this.init_theme()
+            {#// 为了获取session, 把login方法和data的表单数据都拿过来了#}
+            {#this.login ()#}
+            this.getProbList()
+            // this.getReportData()  // 由于VUE插值不能很好的显示HTML, 因此不在这里获取word了
+            // report界面下拉菜单初始化
+            this.initReportConceptSelect()
+            // 时钟卡片信息
+            this.initClocCardInfo()
+            // 模拟测试计时器
+            this.fnVueSimulationTimer();
+        },
+        async mounted() {
+            // 初始化ACE Editor,不在created而是在mounted里初始化, 因为要先创建完成html元素才能指定宽高之类的
+            this.initACEEditor()
+            // 页面创建完成后执行一下下面函数, 选中第一个下标
+            // 这里首页报告与测试界面初始化选中index冲突是因为, 首页没index元素会报错
+            // 不往下执行了, 现在this.changeTestIndex函数里加了个判断就好了
+            this.changeTestIndex(0)
+            // 在problemset页面由于替换没有这个元素, 此处判断一下避免报错
+            let left_chart = document.getElementById('test_concept_radar_charts_option')
+            if (left_chart === null){  // 不论是首页还是report都有这张图, 所以不存在就不是这俩界面
+                return
+            }
+            // ======通过控制台打印发现mounted先于created运行了, 所以此处直接获取====== //
+            // 获取数据这里由于是异步的, 所以必须再此执行
+            const { data:res } = await axios.get('/api/report/')
+            if (res.code !== 200) {
+                return this.$message.error('获取报告信息失败!')
+            }
+
+            let flag = false
+            if (document.getElementById('user_prob_pie_charts_option')  === null){
+                flag = true  // 上面两个图是dl_index和Report共有的, 下面就report有
+                // 由于dl_index界面太小, 去掉Echarts图例部分
+                res.data.test_concept_pie_charts_option['legend'] = null
+            }
+
+            // 用户知识点掌握情况雷达图
+            this.test_concept_radar_charts_option = echarts.init(document.getElementById('test_concept_radar_charts_option'));
+            this.test_concept_radar_charts_option.setOption(res.data.test_concept_radar_charts_option)
+
+            // 用户知识点掌握情况饼图
+            this.test_concept_pie_charts_option = echarts.init(document.getElementById('test_concept_pie_charts_option'));
+            this.test_concept_pie_charts_option.setOption(res.data.test_concept_pie_charts_option)
+
+            if (flag) {
+                return// 上面两个图是dl_index和Report共有的, 下面就report有, dl_index界面直接返回, 不加载下面
+            }
+
+            // 3. 基于准备好的dom，初始化echarts实例
+            // 用户已做题目饼图形式1
+            this.user_prob_pie_charts_option = echarts.init(document.getElementById('user_prob_pie_charts_option'));
+            // 4.准备数据和配置项, option具体值  5.展示数据, setOption方法
+            this.user_prob_pie_charts_option.setOption(res.data.user_prob_pie_charts_option)
+
+            // 用户知识点掌握情况折线图
+            this.user_concept_line_charts_option = echarts.init(document.getElementById('user_concept_line_charts_option'));
+            this.user_concept_line_charts_option.setOption(res.data.user_concept_line_charts_option)
+
+            // 用户已做题目饼图形式2
+            this.user_prob_polar_charts_option = echarts.init(document.getElementById('user_prob_polar_charts_option'));
+            this.user_prob_polar_charts_option.setOption(res.data.user_prob_polar_charts_option)
+        },
+        watch: {
+            remainSimulationTime:  async function (newData, oldData) {
+                //newData是更新后的数据
+                //oldData是旧数据
+                const eClockDate = document.getElementById('simulation-timer');  // 首先要有这个计时器
+                if (newData ===  0 && eClockDate !== null){
+                    const { data:res } = await axios.get('/api/simulationProbNid/')
+                    if (res.code !== 200) {
+                        return this.$message.error('获取模拟题题目信息失败!')
+                    }
+                    this.prob_nid_list = res.data
+                    this.exectueAceCode(this.prob_nid_list, 'time_out_final_submit', 'test')
+                }
+            },
+        },
+        methods: {
+            // 时钟卡片信息
+            async initClocCardInfo(){
+                const { data:res } = await axios.get('/api/clockCardInfo/')
+                if (res.code !== 200) {
+                    return this.$message.error('获取时间卡片信息失败!')
+                }
+                this.clockCardInfo = res.data
+            },
+            // 初始化ACE Editor函数, mounted里初始化
+            initACEEditor(){
+                // ACE Editor
+                if (null !== document.getElementById("ace_editor_body")){
+                    // 有这个元素时才使用ACE Editor
+                //}else{
+                    //初始化id字符串（不加#）
+                    editor = ace.edit('ace_editor_body');
+                    // 不知道为什么直接使用this.editor = ace.edit('ace_editor_body');控制台会报错
+                    // this.editor = editor应该是指针赋值, 修改其中一个另一个值也改变
+                    this.editor = editor
+                    editor.setOptions({
+                        enableBasicAutocompletion: true,
+                        enableSnippets: true,
+                        enableLiveAutocompletion: true
+                        });
+                    // 老是报警告提示我设置这个
+                    editor.$blockScrolling = Infinity
+                    //设置主题
+                    editor.setTheme("ace/theme/github");
+                    // 设置编辑语言
+                    editor.getSession().setMode("ace/mode/c_cpp")
+                    // 设置字体大小
+                    editor.setFontSize(16)
+                    // 设置行高;
+                    document.getElementById("ace_editor_body").style.lineHeight="20px";
+                    // 移动光标至第0行，第0列
+                    editor.moveCursorTo(0, 0);
+
+                    //设置只读（true时只读，用于展示代码）
+                    editor.setReadOnly(false);
+                    //自动换行,设置为off关闭
+                    editor.setOption("wrap", "free");
+                    //5.设置编辑内容
+                    let editorValue='#include<iostream>\n' +
+                            'using namespace std;\n' +
+                            '\nclass Solution{\n' +
+                            'public:\n' +
+                            '   void solve_f(){\n' +
+                            '   };\n' +
+                            '};\n' +
+                            '\nint main(void){\n' +
+                            '   int input;\n' +
+                            '   cin>>input;\n' +
+                            '   cout<<"output";\n' +
+                            '   return 0;\n' +
+                            '}';
+                    this.editorValue = editorValue
+                    editor.setValue(editorValue);
+                    //撤销：
+                    // editor.undo();
+                    //查找替换：
+                    // editor.execCommand('replace');
+                    //编辑内容搜索
+                    //editor.execCommand('find');//与ctrl+f功能一致
+                    //自动换行 关闭时free换成off
+                    editor.setOption("wrap", "free");
+                    //获取编辑内容
+                    //this.editor.getValue();
+                    //启用提示菜单 === 无效，不知道为什么
+                    //ace.require("/static/ace/src-min/ext-language_tools");
+                    ace.require("ace/ext/language_tools");
+                    //是否显示边距线
+                    editor.setShowPrintMargin(false);
+
+                    //获取编辑器中语法校验的结果
+                    let annotations = editor.getSession().getAnnotations();
+                    //错误
+                    let error="";
+                    let errorNum=0;
+                    //警告
+                    let warning="";
+                    let warningNum=0;
+                    //遍历结果 记录提示信息
+                    for(let aid = 0, alen = annotations.length; aid < alen; ++aid) {
+                        let row=annotations[aid].row+1;
+                        //存在错误 必须修改
+                        if(annotations[aid].type === 'error') {
+                            let txt=" 行："+row+"；列："+annotations[aid].column+";  提示:"+annotations[aid].text;
+                            error+=txt+"<br>";
+                            errorNum++;
+                        }
+                        //存在警告 可以不修改
+                        if(annotations[aid].type === 'warning'||annotations[aid].type === 'info') {
+                            let txt=" 行："+row+"；列："+annotations[aid].column+";  提示 : "+annotations[aid].text;
+                            warning+=txt+"<br>";
+                            warningNum++;
+                        }
+                    }
+                    //存在错误 必须修改
+                    if( error!="") {
+
+                    }else {
+                    //存在警告 可以不修改
+                    if(warning!="") {
+
+                        }
+                    }
+                }
+            },
+            // 获取ProblemSet界面题目list
+            async getProbList(){
+              const { data:res } = await axios.get('/api/problemset/', { params: this.queryInfo })
+              // console.log(res)
+              if (res.code !== 200) {
+                return this.$message.error('获取用户列表失败!')
+              }
+              {#console.log(res)#}
+              this.probList = res.data
+              // console.log(this.probList)
+              this.total = res.total
+            },
+            // 获取Report界面数据
+            async getReportData(){
+              const { data:res } = await axios.get('/api/report/')
+              // console.log(res)
+              if (res.code !== 200) {
+                return this.$message.error('获取报告信息失败!')
+              }
+              // console.log(res)
+              // 不用再此处获取图表数据了, 直接在mounted里获取
+              //this.radar_charts_data = res.data.radar_charts_data
+              //console.log(this.radar_charts_data)
+              //this.prob_charts_data = res.data.prob_charts_data
+              this.prob_word_data = res.data.prob_word_data
+            },
+            // 监听 pageSize 改变事件
+            handleSizeChange (newSize) {
+              // console.log(newSize)
+              this.queryInfo.pagesize = newSize
+              // 获取新size下用户列表
+              this.getProbList()
+            },
+            // 监听 页码值 改变事件
+            handleCurrentChange (newPage) {
+              // console.log(newPage)
+              this.queryInfo.pagenum = newPage
+              this.getProbList()
+            },
+            // 初始化主题
+            init_theme(){
+                // 读取存储的主题信息
+                let theme = localStorage.getItem('theme')
+                if (theme){ // 为空表示一开始可能没有存储读取不到, 就默认值即可
+                    this.theme = theme
+                }
+            },
+            // 设置主题
+            setTheme(themeName){
+                this.theme = themeName
+                // 持久化存储
+                localStorage.setItem('theme', themeName)
+            },
+            /*// 选择分类
+            switch_article_category(categoryName){
+                this.this_category = categoryName
+            },*/
+            // =========执行提交代码相关方法========= //
+            exectueAceCode(prob_nid_list, submit_execute, prob_test) {  // prob_nid_list后端给页面传的题号list
+                // console.log(prob_nid_list)
+                if (!this.ace_time_stamp){
+                    this.ace_time_stamp = new Date() - 0
+                }
+                let cppStr_list = []
+                if (submit_execute === 'execute'){  // =====测试和做题界面的执行代码按钮===== //
+                    // 点击执行代码时开启加载动画
+                    this.openLoadingAnimation('执行代码中...')
+                    // console.log(prob_nid_list)
+                    // 执行代码时只要传入当前题目id即可, 上传代码传入一个list
+                    prob_nid_list = [prob_nid_list[this.show_prob_index]]
+                    // 只需要判断执行ace代码
+                    cppStr_list = [this.editor.getValue()]
+                } else if (submit_execute === 'test_submit' || submit_execute === 'prob_submit'){  // =====测试和做题界面的提交代码按钮===== //
+                    // 点击提交代码时开启加载动画
+                    this.openLoadingAnimation('提交代码中...')
+                    // 测试界面submit只需执行当前页面代码(这个和execute功能差不多了, 只不过不需要显示结果)
+                    // 做题界面submit也只需要执行当前页面代码
+                    prob_nid_list = [prob_nid_list[this.show_prob_index]]
+                    cppStr_list = [this.editor.getValue()]
+                } else if (submit_execute === 'final_submit'){  // =====测试界面的提交试卷按钮===== //
+                    // 点击提交试卷时开启加载动画
+                    this.openLoadingAnimation('提交试卷中...')
+                    cppStr_list = this.ace_submit_result_list  // 把之前提交的结果传过去
+                } else if (submit_execute === 'time_out_final_submit'){  // =====模拟界面时间结束自动提交试卷===== //
+                    // 点击提交试卷时开启加载动画
+                    this.openLoadingAnimation('时间已到, 自动提交试卷中...')
+                    cppStr_list = this.ace_submit_result_list  // 把之前提交的结果传过去
+                }
+                const post_data = {
+                    'prob_test': prob_test,
+                    'submit_execute': submit_execute,
+                    'time': this.ace_time_stamp,
+                    'cppStr_list': cppStr_list,
+                    // 传入当前的nid即可, 为与后端配合, 传入还是一个list
+                    'prob_nid_list': prob_nid_list,
+                }
+                axios.post('/api/aceProblemExecute/', post_data).then(res => {
+                    if (res.data.code === 200) {
+                        // 此处是两个data, 外层data是res自带的, 内层data才是我后端发送的
+                        // document.getElementById('ace_result_p').innerHTML = res.data.data[0]['pass']
+                        // 记录返回结果, 以后可能按需返回相应的东西了, 再说吧
+                        this.ace_prob_result = res.data.data
+                        // console.log(res.data.data)
+                        if (submit_execute === 'execute') {  // =====测试和做题界面的执行代码按钮===== //
+                            this.fullscreenLoading_service.close();  // element ui服务器方式加载动画
+                            this.executeDialogVisible = true
+                        } else if (submit_execute === 'test_submit'){  // =====测试界面的提交代码按钮===== //
+                            this.fullscreenLoading_service.close();  // element ui服务器方式加载动画
+                            // 测试界面单次提交不显示结果, 知道交卷才显示
+                            this.$message.success('提交成功!')
+                            // 成功提交一题就应该把右侧index框变成绿色
+                            let prob = document.getElementById((this.show_prob_index).toString())
+                            // 同时修改提交情况表, 把提交结果记录下来, 返回的是一个list不过只有一个元素
+                            this.ace_submit_result_list[this.show_prob_index] = res.data.data[0].pass
+                            // this.prob_pass_count = res.data.data[0].prob_pass_count
+                            // console.log(this.ace_submit_result_list)
+                            prob.classList.add('test_submit')
+                        } else if (submit_execute === 'final_submit' || submit_execute === 'prob_submit' || submit_execute === 'time_out_final_submit'){
+                            // 测试交卷或者做题界面提交弹出结果框
+                            // 提交试卷准备弹出结果框时结束加载动画
+                            //this.fullscreenLoading = false;  // 指令方式
+                            this.fullscreenLoading_service.close();  // element ui服务器方式加载动画
+                            this.resultDialogVisible = true
+                        }
+                    } else {
+                        this.$message.error(res.msg || res.message || '提交失败!')
+                    }
+                }).catch((err) => {
+                    this.$message.error(err.message || '提交出错!')
+                })
+            },
+            // 开启加载动画
+            openLoadingAnimation(showMsg){
+                // this.fullscreenLoading = true;  // element ui指令方式加载动画
+                this.fullscreenLoading_service = this.$loading({    // element ui服务器方式加载动画
+                    lock: true,
+                    text: showMsg,
+                    spinner: 'el-icon-loading',
+                    // background: 'rgba(0, 0, 0, 0.7)'
+                });
+            },
+            // =========显示结果对话框相关操作========= //
+            // 对话框关闭前回调
+            handleResultDialogClose(done){
+                // console.log('handleResultDialogClose')
+                this.resultDialogGoOn()
+                done()
+            },
+            // 对话框继续测试按钮
+            resultDialogGoOn(){
+                // 直接重定向回来, 相当于刷新一下
+                location.href='/test/';
+                // 存在上一次test的时间戳
+                // 则新生成一个时间戳, 用于记录新一次的test
+                /*if (this.ace_time_stamp){
+                    this.ace_time_stamp = new Date() - 0
+                }
+                // 对话框消失
+                this.resultDialogVisible = false*/
+            },
+            // 对话框查看报告按钮
+            resultDialogGoToReport(){
+                // 跳转页面
+                //location = window.location.href='/dl_index/';
+                location.href='/report/';
+                // 对话框消失, 页面都没了, 对话框也不用消失了
+                // this.resultDialogVisible = false
+            },
+            // 测验界面右侧题目index点击事件, 在mounted中页面创建完成后执行一下该函数
+            changeTestIndex(index) {
+                // this.show_prob_index当前页, index跳转页
+                // this.show_prob_index就是当前选中li, 传入的参数index就是下一个要选中li
+                // 首先移除当前选中li元素的active类属性
+                let prob_current = document.getElementById((this.show_prob_index).toString())
+                if (prob_current === null){  // 其他页面没有这个元素
+                    return
+                }
+                // ===============跳转之前的操作=============== //
+                // 只要是跳转了就保存当前页值, 保存当前页ace值,
+                // 当前页的prob_editorValue就改变了, 不再为0了
+                this.prob_editorValue[this.show_prob_index] = this.editor.getValue()
+                // 跳转页是首次跳转, ace设置为初始值
+                if (this.prob_editorValue[index] === ''){
+                    // 第一次设置ace为初始值
+                    this.editor.setValue(this.editorValue)
+                }else{  // 跳转页不是首次跳转, 设置ace为之前保存值
+                    // 设置跳转页ace值为上一次保存值
+                    this.editor.setValue(this.prob_editorValue[index])
+                }
+
+                // 移除当前页active属性
+                prob_current.classList.remove('active')
+                // 给跳转页要选中li元素添加active类属性
+                this.show_prob_index = index  // 实现跳转操作
+                let prob_next = document.getElementById((this.show_prob_index).toString())
+                prob_next.classList.add('active')
+            },
+            /*// report界面下拉菜单
+            handleCommand(command) {
+                this.$message('click on item ' + command);
+            },*/
+            // 初始化report界面下拉菜单选项
+            initReportConceptSelect() {
+                axios.get('/api/reportConcept/?type=init').then(res => {
+                    if (res.data.code === 200) {
+                        this.report_select_options = res.data.data
+                        this.report_select_value = this.report_select_options[0]['value']
+                    } else {
+                        this.$message.error(res.msg || res.message || '提交失败!')
+                    }
+                }).catch((err) => {
+                    this.$message.error(err.message || '提交出错!')
+                })
+            },
+            // report界面下拉菜单改变事件
+            reportConceptSelectChange(value) {
+                const post_data = {
+                    'concept_nid': value,
+                }
+                axios.post('/api/reportConcept/', post_data).then(res => {
+                    if (res.data.code === 200) {
+                        this.user_prob_polar_charts_option.setOption(res.data.data)
+                    } else {
+                        this.$message.error(res.msg || res.message || '提交失败!')
+                    }
+                }).catch((err) => {
+                    this.$message.error(err.message || '提交出错!')
+                })
+            },
+            // 模拟测试计时器
+            fnVueToDouble(num){
+                // 时间小于10显示时前面加个0
+                //声明一个返回结果
+                let sResult = '';
+                    if(num<10){
+                        //判断数字小于10则是单数字，需要在前面添加字符串0
+                        sResult = '0' + num;
+                    }else{
+                        //数字为10以上转换为字符串
+                        sResult = '' + num;
+                    }
+                //返回格式化后的字符串
+                return sResult;
+            },
+            fnVueFormatTime(remainTestTime){
+                // 根据剩余秒数计算时间
+                // nRemainTestTime = nHours*60*60 + nMinutes*60 + nSeconds
+                let nSeconds = remainTestTime % 60;  // 获取秒数
+                let nHours = Math.floor(remainTestTime / (60*60));  // 获取小时数
+                let nMinutes = Math.floor((remainTestTime  - nHours*60*60) / 60);  // 获取分钟数
+                return this.fnVueToDouble(nHours) + ' : ' + this.fnVueToDouble(nMinutes) + ' : ' + this.fnVueToDouble(nSeconds);
+            },
+            fnVueSimulationTimer(){
+                // 使用定时器实时更新时间
+                // 计时器不能用this问题的解决: https://blog.csdn.net/qq_36472571/article/details/113698767
+                setInterval(() => {
+                    this.remainSimulationTime = this.remainSimulationTime - 1
+                    this.showRemainSimulationTime  = this.fnVueFormatTime(this.remainSimulationTime);
+                },1000);
+            },
+        }
+    })
+
+    // 轮播图函数定义
+    function fnBanner(){
+        // 获取需要轮播的div
+        let menu_img = document.querySelectorAll('.dynamic_shuffl')
+        {#console.log(menu_img)#}
+        // 获取它的长度
+        let menu_length = menu_img.length
+        // 初始位置
+        let index = 0
+        // 给轮播图header.html加了title后,
+        // 伪类选择器选第一个元素失效了, 但能选择最后一个元素
+        // 此处就用js在初始时把第一个元素的opacity设为1
+        menu_img[index].style.opacity = 1
+        // 每次都清除定时器
+        let timer = null
+        clearInterval(timer)
+        timer = setInterval(()=>{
+            // 初始显示的是第一张图片, 所以这里直接++显示第二张
+            index ++
+            // 到达最大长度, 表示所有图片都轮播过一次了
+            if(index === menu_length){
+                index = 0
+            }
+            // 样式复原, 都不显示
+            for (let i of menu_img) {
+            i.style.opacity = 0 // 把所有div透明度设置为0, 不显示
+            }
+            // 此处再设置显示特定的
+            menu_img[index].style.opacity = 1
+        }, 6000)
+    }
+
+    // 动态导航条函数定义
+    function fnDynamicNav(){
+        let nav = document.querySelector('.nav_bg')
+        // 监听滚动时事件
+        window.onscroll = function () {
+            let top = document.documentElement.scrollTop
+            if (top >= 300){
+                // 当滚动了300高度时给滚动条加上show类
+                nav.classList.add('show')
+            }else {
+                nav.classList.remove('show')
+            }
+        }
+    }
+
+    // 时钟卡片信息函数定义
+    // https://www.jb51.net/article/252132.htm
+    function fnCreatClock(){
+        //声明时间相关变量
+        let dLocal, nYear, nMonth, nDate, nHours, nMinutes, nSeconds;
+
+        //1 获取计算机本地时间
+        function fnGetDate(){
+            //1.1 调用date对象
+            dLocal = new Date();
+            //1.2 获取当前年份
+            nYear = dLocal.getFullYear();
+            //1.3 获取当前月份，月份是从0开始计数，所以需要加1才是正确的月份
+            nMonth = dLocal.getMonth() + 1;
+            //1.4 获取当前日期
+            nDate = dLocal.getDate();
+            //1.5 获取当前小时
+            nHours = dLocal.getHours();
+            //1.6 获取分钟
+            nMinutes = dLocal.getMinutes();
+            //1.7 获取秒数
+            nSeconds = dLocal.getSeconds();
+        }
+
+        //2.1 封装一个函数，用于把单数字前添加字符串0，例如1改为01
+        function fnToDouble(num){
+          //声明一个返回结果
+          let sResult = '';
+          if(num<10){
+            //判断数字小于10则是单数字，需要在前面添加字符串0
+            sResult = '0' + num;
+            }else{
+            //数字为10以上转换为字符串
+            sResult = '' + num;
+            }
+            //返回格式化后的字符串
+            return sResult;
+        }
+
+        function fnFormatDate(){
+            //2.2 组合时间数据为字符串。本实例主要针对初学者，所以这里用的是最简单的格式化方式，即把所有数据用+号相连
+            return nYear + '-' + fnToDouble(nMonth) + '-' + fnToDouble(nDate);
+        }
+
+        function fnFormatTime(){
+            //2.2 组合时间数据为字符串。本实例主要针对初学者，所以这里用的是最简单的格式化方式，即把所有数据用+号相连
+            return fnToDouble(nHours) + ' : ' + fnToDouble(nMinutes) + ' : ' + fnToDouble(nSeconds);
+        }
+
+        function fnGetDarkOrLight(nHours){
+            //2.2 组合时间数据为字符串。本实例主要针对初学者，所以这里用的是最简单的格式化方式，即把所有数据用+号相连
+            if(nHours >= 12)
+                return 'PM'
+            else
+                return 'AM'
+        }
+
+        //3.1 获取clock元素
+        const eClockDate = document.getElementById('card-clock-clockdate');
+        if (eClockDate === null) {  // 没有该元素直接return
+          return
+        }
+        const eClockTime = document.getElementById('card-clock-time');
+        const eClockDarkOrLight = document.getElementById('card-clock-darkorlight');
+        //获取时间
+        fnGetDate();
+        //3.2 修改clock元素中的时间
+        eClockDate.innerHTML = fnFormatDate();
+        eClockTime.innerHTML = fnFormatTime();
+
+        //使用定时器实时更新时间
+        setInterval(function(){
+            //3.3 每秒更新时间
+            fnGetDate();
+            //3.3 修改clock元素中的时间
+            eClockDate.innerHTML = fnFormatDate();
+            eClockTime.innerHTML = fnFormatTime();
+            eClockDarkOrLight.innerHTML = fnGetDarkOrLight(nHours);
+        },1000);
+    }
+
+    // 模拟测试计时器
+    /*function fnSimulationTimer(TestTime){
+        let remainTestTime = TestTime
+        const eSimulationTimer = document.getElementById('simulation-timer');
+        if (eSimulationTimer === null) {  // 没有该元素直接return
+            return
+        }
+
+        function fnToDouble(num){
+          //声明一个返回结果
+          let sResult = '';
+          if(num<10){
+            //判断数字小于10则是单数字，需要在前面添加字符串0
+            sResult = '0' + num;
+            }else{
+            //数字为10以上转换为字符串
+            sResult = '' + num;
+            }
+            //返回格式化后的字符串
+            return sResult;
+        }
+
+        function fnFormatTime(remainTestTime){
+            // nRemainTestTime = nHours*60*60 + nMinutes*60 + nSeconds
+            let nSeconds = remainTestTime % 60;  // 获取秒数
+            let nHours = Math.floor(remainTestTime / (60*60));  // 获取小时数
+            let nMinutes = Math.floor((remainTestTime  - nHours*60*60) / 60);  // 获取分钟数
+            return fnToDouble(nHours) + ' : ' + fnToDouble(nMinutes) + ' : ' + fnToDouble(nSeconds);
+        }
+
+        //使用定时器实时更新时间
+        setInterval(function(){
+          remainTestTime = remainTestTime - 1
+          eSimulationTimer.innerHTML = fnFormatTime(remainTestTime);
+        },1000);
+    }*/
+
+    fnBanner();
+    fnDynamicNav();
+    fnCreatClock();
+    // 定时器一开始减了1秒, 所以此处加1
+    // fnSimulationTimer(2*60*60+1);
+</script>
+</body>
+</html>

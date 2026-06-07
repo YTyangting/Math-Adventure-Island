@@ -1,0 +1,46 @@
+// 字体设置
+@font-face {
+  font-family: 'UnidreamLED';
+  src:url(../font/UnidreamLED.eot); /***兼容ie9***/
+  src:url(../font/UnidreamLED.eot?#iefix)format('embedded-opentype'), /***兼容ie6-ie8***/
+  url('../font/UnidreamLED.woff') format('woff'),
+  local('UnidreamLED'), url("../font/UnidreamLED.woff");/***默认使用本地的***/
+}
+
+.show_time {
+    background-color: white;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 15px;
+
+    .hexo_electric_clock {
+      position: relative;
+      width: calc(100% - 40px);
+      height: 100%;
+      background: #eaeaea;
+      color: black;
+      font-size: 16px;
+      line-height: 1.5;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: inset 0 0 9px 9px #ccc;
+
+      .clock-row {
+          font-family: 'UnidreamLED';
+          font-weight: 400;
+          color: #000;
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: nowrap;
+          white-space: nowrap;
+
+          .card-clock-time {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 35px;
+          }
+      }
+    }
+  }

@@ -1,0 +1,79 @@
+<div class="post">
+ <div class="prob-titile">
+  3-1 改错题
+ </div>
+ <div class="post-content">
+  <h3>
+   题目描述
+  </h3>
+  <div class="lead2">
+   <pre><code>判断方阵A与B是否相等或方阵A顺时针旋转90度后与方阵B是否相等。
+设有方阵A和B阶数相同，若方阵A和方阵B对应位置的元素值均相等，则称方阵A等于方阵B；若方阵A经过顺时针旋转90度后形成的新方阵中各元素与方阵B对应位置的元素值均相等，则称方阵A旋转90度后与方阵B相等。
+函数equal的功能是，判断a指向的数组中存储的方阵与b指向的数组中存储的方阵是否相等，若相等函数返回1，否则返回0。函数rotate的功能是将a指向的数组中存储的方阵顺时针旋转90度。
+【含有错误的源程序】
+#include&lt;stdio.h&gt;
+#define N 10
+int equal(int a[][N],int b[][N],int n)
+{  int i,j;
+    for(i=0;i&lt;n;i++)
+     for(j=0;j&lt;n;j++)
+        if (a[i][j]!=b[i][j])
+           return 0;
+      else return 1;
+}
+void rotate(int a[][N],int n)
+{  int i,j,c[N][N];
+   for(i=0;i&lt;n;i++)
+      for(j=0;j&lt;n;j++)
+      c[i][j]=a[n-j][i];
+   for(i=0;i&lt;n;i++)
+      for(j=0;j&lt;n;j++)
+          a[i][j]=c[i][j];
+}
+int main()
+{  int a[N][N],b[N][N],k, n,i,j;
+   scanf("%d", &amp;n);
+   for(i=0; i&lt;n; i++)
+      for(j=0; j&lt;n; j++)  scanf("%d", &amp;a[i][j]);
+   for(i=0; i&lt;n; i++)
+      for(j=0; j&lt;n; j++)  scanf("%d", &amp;b[i][j]);
+   k=equal(a,b,4);
+   i=0;
+   if(k) i=1;
+   else
+   {   rotate(a,b,4);
+       k=equal(a,b,4);
+       if(k)i=2;
+   }
+   switch(i);
+   { case 0:puts("A!=B");  break;
+     case 1:puts("A=B");    break;
+     case 2:puts("A rotate 90,A=B");
+   }
+   return 0;
+}</code></pre>
+  </div>
+  <h3>
+   输入样例
+  </h3>
+  <div class="discriptfont sampleboard" id="sampleInputContent1">
+   <pre><code>4
+0  0  0  0 
+0  0  0  0
+0  1  0  0
+0  0  0  0 
+0  0  0  0
+0  1  0  0
+0  0  0  0
+0  0  0  0
+</code></pre>
+  </div>
+  <h3>
+   输出样例
+  </h3>
+  <div class="discriptfont sampleboard" id="sampleOutputContent1">
+   <pre><code>A rotate 90,A=B
+</code></pre>
+  </div>
+ </div>
+</div>

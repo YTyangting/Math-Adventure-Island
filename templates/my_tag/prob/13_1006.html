@@ -1,0 +1,61 @@
+<div class="post">
+ <div class="prob-titile">
+  硕哥的电路图
+ </div>
+ <div class="post-content">
+  <h3>
+   题目描述
+  </h3>
+  <div class="lead2">
+   <pre><code><p>硕哥物理很好，但他还是不喜欢每次对于一个新的电路图计算电阻，于是他把这个问题扔给了你。</p>
+
+<p>有一张n个点,m条边的电路图，点的标号是1~n，1和电源正极相连，n与电源负极相连。求1~n的等效电阻。（输出保留两位小数）数据保证1到n联通。</p>
+
+<p>样例解释</p>
+
+<p>三个点，四条边。<br/>
+第一条边连接1和2号点，阻值为2。<br/>
+第二条边连接1和2号点，阻值为2。<br/>
+第三条边连接2和3号点，阻值为1。<br/>
+第四条边连接1和3号点，阻值为2。<br/>
+总的等效电阻为1.00</p>
+</code></pre>
+  </div>
+  <h3>
+   输入格式
+  </h3>
+  <div class="lead2">
+   <pre><code>第一行两个整数n和m。
+接下来m行，每行三个整数u,v,w表示有一条u到v的无向边，边上的电阻阻值为w。
+对于100%的数据，满足1&lt;=n&lt;=m&lt;=100</code></pre>
+  </div>
+  <h3>
+   输出格式
+  </h3>
+  <div class="lead2">
+   <pre><code>输出一个两位小数，表示答案。
+推荐输出方式：
+printf("%.2lf",ans);//ans为double类型
+或者
+printf("%.2f",ans);//ans为float类型</code></pre>
+  </div>
+  <h3>
+   输入样例
+  </h3>
+  <div class="discriptfont sampleboard" id="sampleInputContent1">
+   <pre><code>3 4
+1 2 2
+1 2 2
+2 3 1
+1 3 2
+</code></pre>
+  </div>
+  <h3>
+   输出样例
+  </h3>
+  <div class="discriptfont sampleboard" id="sampleOutputContent1">
+   <pre><code>1.00
+</code></pre>
+  </div>
+ </div>
+</div>

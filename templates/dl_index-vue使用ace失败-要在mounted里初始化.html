@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+{# 导入自定义标签, 页面等等 #}
+{% load my_tag %}
+<head>
+    <meta charset="UTF-8">
+    <title>平台</title>
+    <!--  此处远程链接有问题,
+          必须手动上传.scss下的.css和.map文件  -->
+    <link rel="stylesheet" href="/static/my/css/base.css">
+    <link rel="stylesheet" href="/static/my/css/reset.css">
+    {% block css %}
+        <!-- 把自己这个dl_index样式放在base下面, 修改一些footer高度等 -->
+        <link rel="stylesheet" href="/static/my/css/dl_index.css">
+    {% endblock %}
+    <!-- 图标库样式引入 -->
+    <link rel="stylesheet" href="/static/fontawesome-free-5/css/all.min.css">
+    <!-- 引入element ui样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="/static/vue/vue.js"></script>
+    <!-- 引入element ui组件库, 一定要放到vue下面 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+<!-- VUE -->
+<div id="app">
+    <!-- link不只能写在head里, 在此处更换主题 -->
+    <link rel="stylesheet" :href="'/static/my/css/theme/' + theme +'.css'">
+    <!-- 顶部导航栏 -->
+    <nav class="nav_bg">
+        <div class="left">
+            <a href="/dl_index">首页</a>
+            <a href="/problemset">题库</a>
+            <a href="/test">测验</a>
+            <a href="#">报告</a>
+            <a href="#">做题记录</a>
+        </div>
+        <div class="right">
+            <img v-show="theme === 'light'" src="/static/my/img/nav/light.svg" @click="setTheme('dark')" alt="">
+            <img v-show="theme === 'dark'" src="/static/my/img/nav/dark.svg"  @click="setTheme('light')" alt="">
+
+            <!-- 在登录或注册后执行了auth.login(request, user),
+                 把user加入到了request里,
+                 所以只要从views.index函数里传来request即可获取用户名
+             -->
+            <!--  如果登录了, 就一定会有username,
+                  注意此处不能用request.user, 注销了这个字段还是有的,
+                  但是username没了
+             -->
+            {% if request.user.username %}
+                <el-dropdown>
+                  <span class="el-dropdown-link">
+                    {{ request.user.username }}<i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item><a href="#">个人中心</a></el-dropdown-item>
+                    <el-dropdown-item><a href="/logout">注销退出</a></el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+            {% else %}
+                <a href="/login">登录</a>
+                <a href="/sign">注册</a>
+            {% endif %}
+        </div>
+    </nav>
+    <!-- 内容主体 -->
+    {% block banner %}
+        <!-- 自定义标签, 接收参数'index' -->
+        {% banner 'index' %}
+    {% endblock %}
+    <main>
+        <!-- 获取django安全验证的token放在外面, 其它的html都可以继承到 -->
+        {% csrf_token %}
+        {% block main %}
+            <div class="main">
+                <div class="left">
+                    <div class="boutique_article card">
+                        <div class="title">
+                            <a href="#">学习报告</a>
+                        </div>
+                        <div class="body">
+                            <!-- 此处没用类选择器生成样式, 所以可以样式不同 -->
+                            <div class="left">
+                                <div id="left_chart" style="width: 400px;height:300px;"></div>
+                            </div>
+                            <div class="right">
+                                <div id="right_chart" style="width: 400px;height:300px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="position" class="all_article card">
+                        <div class="title">
+                            <a href="#">推荐题目</a>
+                        </div>
+                        <div class="body">
+                            <ul class="article_content_ul">
+                                <!-- 一篇篇的文章, 放在ul这个无序list里 -->
+                                {% for prob_reco in prob_query %}
+                                    <li>
+                                        <!-- 目前还不知道怎么用class三元组赋值多个类属性category_flag -->
+                                        <div
+                                         len="2" type="后端"
+                                         :class="[{{ prob_reco.category }} === 2?'buruo':'tigao']">
+                                            <!-- 自定义了一个过滤器来获取choice值 -->
+                                            {{ prob_reco|displayName:'category' }}
+                                        </div>
+                                        <div class="left">
+                                            <div>
+                                                <img src="/media/article_img/7.jpg">
+                                            </div>
+                                        </div>
+                                        <div class="right">
+                                            <!-- 每道题目的nid是唯一的, 在problem里根据nid查到对应html就可以了
+                                                 在url后面加了GET请求参数, 根据GET参数不同,
+                                                 上一题下一题范围就应该不同(整个题库里还是只在推荐题目里)-->
+                                            <h2><a href="problem/{{  prob_reco.problem.nid }}?from=recommend#problem_position">{{  prob_reco.problem.title }}</a></h2>
+                                            <p>
+                                                {{ prob_reco.problem.desc }}
+                                            </p>
+                                            <div class="article_info">
+                                                <span>
+                                                    <i class="far fa-clock"></i>{{ prob.create_date|date:'Y-m-d' }}
+                                                </span>
+                                                <span>
+                                                    通过次数：{{  prob_reco.problem.pass_count }}
+                                                </span>
+                                                <span>
+                                                    提交次数：{{  prob_reco.problem.submit_count }}
+                                                </span>
+{#                                                <span>#}
+{#                                                    <i class="fas fa-comments"></i>231#}
+{#                                                </span>#}
+{#                                                <span>#}
+{#                                                    <i class="fas fa-star-half-alt"></i>231#}
+{#                                                </span>#}
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <ul class="pager">
+                                {{ pager.page_html|safe }}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="advertisement card">
+                        <div class="title">
+                            <h2>个人中心</h2>
+                            <div>
+                                <a href="#">申请</a>
+                            </div>
+                        </div>
+                        <div class="body">
+{#                            main content#}
+                            <ul>To Do List
+                                <li>题目上传下载</li>
+                                <li>报告展示</li>
+{#                                <li>题目搜索</li>#}
+                                <li>个人中心</li>
+                                <li>
+                                    题目界面实现上一题下一题功能,
+                                    读取当前类别的题目, 得到一个list,
+                                    定位到相应的题目, 找到它的上一题下一题
+                                </li>
+                                <!--
+                                <li>===== 没能实现下拉加载但是实现了点击index显示每一题
+                                    测试界面实现下拉加载,
+                                    悬浮目录定位到每一题(#position锚点, 15个小方格子, 哪一题上传了方格为绿色背景),
+                                    下拉加载主要是想让他们在同一个页面, 不需要考虑组件通信, 维护一个共享list
+                                    在mounted里初始化时会和首页报告图冲突, 考虑把两个script分开
+                                </li>
+                                -->
+                                <li>数据库: 用户、题目、做题记录、知识点</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </main>
+    <!-- 底部信息栏 -->
+    <footer>
+        <div class="left">
+            <p class="version">
+                <span>version</span>
+                <span>1.0.0</span>
+            </p>
+            <p>
+                <span>建站日期: 2022-5-22</span>
+            </p>
+        </div>
+        <div class="right">
+            <div class="contact">
+                <div>
+                    <img class="svg" src="/static/my/img/footer/qq_icon.svg">
+                    <img class="qq" src="/static/my/img/footer/qq.png">
+                </div>
+                 <div>
+                     <a href="https://www.bilibili.com/" target="_blank">
+                         <img class="svg" src="/static/my/img/footer/bilibili_icon.svg">
+                     </a>
+                </div>
+            </div>
+            <p>
+                联系邮箱: liu_yazhou2356@163.com
+            </p>
+        </div>
+    </footer>
+</div>
+<script src="/static/axios/axios.min.js"></script>
+<script src="/static/echarts/echarts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ext-language_tools.js" type="text/javascript"></script>
+<script>
+    // axios的请求前拦截器, 或者说中间件
+    axios.interceptors.request.use(request => {
+        {#console.log(request)#}
+        {#request.headers.Authorization = window.sessionStorage.getItem('token')#}
+        if (request.method === 'post' || request.method === 'get'){
+            // 首先获取name为csrfmiddlewaretoken的input,
+            // 就是上面html代码的这个{ % csrf_token % }',
+            // 然后获取其value值, 即token值
+            let csrftoken = document.querySelector('input[name="csrfmiddlewaretoken"]').value
+            {#console.log(csrftoken)#}
+            // 最后在每次post请求时, 在请求头加上这个csrftoken
+            request.headers['X-CSRFToken'] = csrftoken
+        }
+        return request  // 最后一定要返回, 把请求发出去
+    })
+    new Vue({
+        el: '#app',
+        // 将vue的插值改成[[]]
+        delimiters: ["[[", "]]"],
+        data: {
+            theme: 'light', // 默认主题
+            {#this_category: 'qianduan', // 当前所在的位置#}
+            // =====题库列表数据===== //
+            queryInfo: {
+                // 查询参数
+                query: '',
+                // 当前页码
+                pagenum: 1,
+                // 每页显示条数
+                pagesize: 2
+            },
+            probList: [],
+            total: 0,
+            // =====题目上传列表===== //
+            probFileList: [],
+            prob_time_stamp: '',
+            prob_upload_path: [0],
+            // 请求头
+            headerObj: {'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value},
+            // =====测试上传列表===== //
+            show_prob_index: 0,
+            testFileList: [],
+            test_time_stamp: '',
+            test_prob_upload_path: new Array({{ count }}).fill(0),
+            // =====题目结果对话框===== //
+            prob_result: '',
+            // =====测试结果对话框===== //
+            test_prob_result: '',
+            resultDialogVisible: false,
+            // =====ACE结果===== //
+            ace_result: 'ace',
+        },
+        created() {
+            // 刷新后会调用此方法
+            this.init_theme()
+            {#// 为了获取session, 把login方法和data的表单数据都拿过来了#}
+            {#this.login ()#}
+            this.getProbList()
+        },
+        mounted() {
+            // 初始化ACE Editor
+            this.initACEEditor()
+            // 页面创建完成后执行一下下面函数, 选中第一个下标
+            // 这里首页报告与测试界面初始化选中index冲突是因为, 首页没index元素会报错
+            // 不往下执行了, 现在this.changeTestIndex函数里加了个判断就好了
+            this.changeTestIndex(0)
+            // 在problemset页面由于替换没有这个元素, 此处判断一下避免报错
+            let left_chart = document.getElementById('left_chart')
+            if (left_chart === null){
+                return
+            }
+            // 3. 基于准备好的dom，初始化echarts实例
+            let myLeftChart = echarts.init(document.getElementById('left_chart'));
+            // 4. 准备数据和配置项
+            let left_chart_option = {
+                                  legend: {
+                                    orient: 'vertical',
+                                    x: 'left', //可设定图例在左、右、居中
+                                    y: 'top', //可设定图例在上、下、居中
+                                    padding:[20,0,0,20], //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+                                    data: ['A', 'B', 'C', 'D', 'E', 'F']
+                                  },
+                                  series: [
+                                    {
+                                      type: 'pie',
+                                      data: [
+                                        {
+                                          value: 100,
+                                          name: 'A'
+                                        },
+                                        {
+                                          value: 200,
+                                          name: 'B'
+                                        },
+                                        {
+                                          value: 300,
+                                          name: 'C'
+                                        },
+                                        {
+                                          value: 400,
+                                          name: 'D'
+                                        },
+                                        {
+                                          value: 500,
+                                          name: 'E'
+                                        }
+                                      ],
+                                      roseType: 'area'
+                                    }
+                                  ]
+                                }
+            // 5. 展示数据
+            myLeftChart.setOption(left_chart_option)
+            // 3. 基于准备好的dom，初始化echarts实例
+            let myRightChart = echarts.init(document.getElementById('right_chart'));
+            // 4. 准备数据和配置项
+            let right_chart_option = {
+                              title: {
+                                text: ''
+                              },
+                              legend: {
+                                orient: 'vertical',
+                                x: 'left', //可设定图例在左、右、居中
+                                y: 'top', //可设定图例在上、下、居中
+                                padding:[20,0,0,20], //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+                                data: ['Allocated', 'Actual']
+                              },
+                              radar: {
+                                // shape: 'circle',
+                                indicator: [
+                                  { name: 'Sales', max: 6500 },
+                                  { name: 'Administration', max: 16000 },
+                                  { name: 'Information Technology', max: 30000 },
+                                  { name: 'Customer Support', max: 38000 },
+                                  { name: 'Development', max: 52000 },
+                                  { name: 'Marketing', max: 25000 }
+                                ]
+                              },
+                              series: [
+                                {
+                                  name: 'Budget vs spending',
+                                  type: 'radar',
+                                  data: [
+                                    {
+                                      value: [4200, 3000, 20000, 35000, 50000, 18000],
+                                      name: 'Allocated'
+                                    },
+                                    {
+                                      value: [5000, 14000, 28000, 26000, 42000, 21000],
+                                      name: 'Actual'
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+            // 5. 展示数据
+            myRightChart.setOption(right_chart_option)
+          },
+        methods: {
+            async getProbList () {
+              const { data:res } = await axios.get('/api/problemset/', { params: this.queryInfo })
+              // console.log(res)
+              if (res.code !== 200) {
+                return this.$message.error('获取用户列表失败!')
+              }
+              {#console.log(res)#}
+              this.probList = res.data
+              // console.log(this.probList)
+              this.total = res.total
+            },
+            // 监听 pageSize 改变事件
+            handleSizeChange (newSize) {
+              // console.log(newSize)
+              this.queryInfo.pagesize = newSize
+              // 获取新size下用户列表
+              this.getProbList()
+            },
+            // 监听 页码值 改变事件
+            handleCurrentChange (newPage) {
+              // console.log(newPage)
+              this.queryInfo.pagenum = newPage
+              this.getProbList()
+            },
+            // 初始化主题
+            init_theme(){
+                // 读取存储的主题信息
+                let theme = localStorage.getItem('theme')
+                if (theme){ // 为空表示一开始可能没有存储读取不到, 就默认值即可
+                    this.theme = theme
+                }
+            },
+            // 设置主题
+            setTheme(themeName){
+                this.theme = themeName
+                // 持久化存储
+                localStorage.setItem('theme', themeName)
+            },
+            /*// 选择分类
+            switch_article_category(categoryName){
+                this.this_category = categoryName
+            },*/
+            // =========文件上传相关方法========= //
+            //题目界面上传文件list改变时触发
+            handleChange(file, fileList) {
+                /* 这里的逻辑应该是弹出fileList中不是.py的文件, 但不知道怎么实现
+                let file_extension_name = file.name.substring(file.name.lastIndexOf(".") + 1)
+                console.log(fileList)
+                console.log(this.probFileList)
+                if('py' !== file_extension_name){
+                    this.probFileList = fileList.slice(-1)
+                    this.$refs.upload.abort()
+                    return this.$message.error('请上传python代码文件!')
+                }*/
+                this.probFileList = fileList.slice(-1)  // 只保留最后一个上传的文件
+            },
+            // 因为handleChange控制不了不上传非.py文件, 在此处限制
+            beforeUpload(file) {
+                let file_extension_name = file.name.substring(file.name.lastIndexOf(".") + 1)
+                if('py' !== file_extension_name){
+                    this.$message.error('只能上传.py文件!')
+                    return false
+                }
+                // 把文件名字改一下, 防止重复上传不覆盖
+                // 第一次上传文件时this.prob_time_stamp为空, 新建一个,
+                // 后续重复上传文件都是这个名字了
+                if (!this.prob_time_stamp){
+                    this.prob_time_stamp = new Date() - 0
+                }
+                const file_name = (this.prob_time_stamp).toString() + '.py'
+                // console.log(file_name)
+                const copyFile = new File([file], file_name)
+                this.myUploadFile(copyFile)
+                return false  // 返回false不使用el-upload的自动上传方法
+            },
+            myUploadFile(file) {
+                const formdata = new FormData()
+                formdata.append('file', file)
+                this.myPostForm(formdata)
+            },
+            myPostForm(formdata) {
+                axios.post('/api/problemUpload/', formdata).then(res => {
+                  if (res.code == null || res.code === 0) {
+                    // do something
+                    // console.log(res.data)
+                    this.myUploadSuccess(res.data)
+                  } else {
+                    this.$message.error(res.msg || res.message || '文件上传失败')
+                  }
+                }).catch((err) => {
+                    this.$message.error(err.message || '文件上传失败')
+                })
+            },
+            // 测验界面成功上传至服务器后逻辑处理
+            myUploadSuccess(res) {
+                if (200 !== res.code)
+                    return this.$message.error('上传失败!')
+                // 把上传文件路径记录下来, 供submitUpload方法使用
+                this.prob_upload_path[0] = res.data.file_path
+                this.$message.success('上传成功!')
+            },
+            // 题目界面执行文件按钮点击事件
+            submitUpload(prob_nid_list) {
+                // 自动上传了, 此处应该写执行代码逻辑
+                // this.$refs.upload.submit()
+                post_data = {
+                    'time': this.test_time_stamp,
+                    'path': this.prob_upload_path,
+                    'prob_nid_list': prob_nid_list,
+                }
+                axios.post('/api/problemExecute/', post_data).then(res => {
+                  if (res.data.code === 200) {
+                    // 此处是两个data, 外层data是res自带的, 内层data才是我后端发送的
+                    this.prob_result = res.data.data.prob_result
+                    this.$message.success('提交成功')
+                    this.resultDialogVisible = true
+                  } else {
+                    this.$message.error(res.msg || res.message || '提交失败!')
+                  }
+                }).catch((err) => {
+                    this.$message.error(err.message || '提交出错!')
+                })
+            },
+            // 测验界面上传文件list改变时触发
+            // 这里直接清空testFileList, 且不显示上传文件list, 所以可以控制非.py文件上传与否
+            testHandleChange(file, fileList) {
+                let file_extension_name = file.name.substring(file.name.lastIndexOf(".") + 1)
+                if('py' !== file_extension_name){
+                    this.testFileList = []
+                    this.$refs.upload.abort()
+                    return this.$message.error('只能上传.py文件!')
+                }
+                // this.testFileDict[this.queryInfo.pagenum] = fileList.slice(-1)  // 只保留最后一个上传的文件
+            },
+            // 右侧题目index点击事件, 在mounted中页面创建完成后执行一下该函数
+            changeTestIndex(index) {
+                // this.show_prob_index就是当前选中li, 传入的参数index就是下一个要选中li
+                // 首先移除当前选中li元素的active类属性
+                let prob_last = document.getElementById((this.show_prob_index).toString())
+                if (prob_last === null){  // 其他页面没有这个元素
+                    return
+                }
+                prob_last.classList.remove('active')
+                // 然后给当下一个要选中li元素添加active类属性
+                this.show_prob_index = index
+                let prob = document.getElementById((this.show_prob_index).toString())
+                prob.classList.add('active')
+            },
+            // 测验界面上传前钩子, 由于原组件不能改名字, 自己照下面改了
+            // https://www.yisu.com/zixun/157993.html
+            testBeforeUpload(file) {
+                // 把文件名字改一下, 不然重复上传不能覆盖了
+                const file_name = (this.show_prob_index).toString() + '.py'
+                // console.log(file_name)
+                const copyFile = new File([file], file_name)
+                this.myTestUploadFile(copyFile)
+                return false  // 返回false不使用el-upload的自动上传方法
+            },
+            myTestUploadFile(file) {
+                const formdata = new FormData()
+                // 第一次上传文件时this.test_time_stamp为空, 新建一个,
+                // 后续就都使用第一次的就能把这次的所有test题放到统一目录下
+                if (!this.test_time_stamp){
+                    this.test_time_stamp = new Date() - 0
+                }
+                formdata.append('time', this.test_time_stamp)
+                formdata.append('file', file)
+
+                //formdata.append('name', 'lbf-file-upload')
+                //formdata.append('_csrfToken', this.$ajax.getCsrfToken()._csrfToken)
+                this.myTestPostForm(formdata)
+            },
+            myTestPostForm(formdata) {
+                axios.post('/api/testProblemUpload/', formdata).then(res => {
+                  if (res.data.code === 200) {
+                    // do something
+                    // console.log(res.data)
+                    this.myTestUploadSuccess(res.data)
+                  } else {
+                    this.$message.error(res.msg || res.message || '文件上传失败')
+                  }
+                }).catch((err) => {
+                    this.$message.error(err.message || '文件上传失败')
+                })
+            },
+            // 测验界面成功上传至服务器后逻辑处理
+            myTestUploadSuccess(res) {
+                if (200 !== res.code)
+                    return this.$message.error('上传失败!')
+                // 成功上传一题就清空上传文件list
+                this.testFileList = []
+                // 成功上传一题就应该把右侧index框变成绿色
+                let prob = document.getElementById((this.show_prob_index).toString())
+                prob.classList.add('test_submit')
+                // console.log(response.data.file_path)
+                this.test_prob_upload_path[this.show_prob_index] = res.data.file_path
+                // console.log(this.test_prob_upload_path)
+                this.$message.success('上传成功!')
+            },
+            // 已作废, 自定义上传方法了, 测验界面成功上传至服务器后返回钩子
+            testUploadSuccess(response, file, fileList) {
+                if (200 !== response.code)
+                    return this.$message.error('上传失败!')
+                // 成功上传一题就清空上传文件list
+                this.testFileList = []
+                // 成功上传一题就应该把右侧index框变成绿色
+                let prob = document.getElementById((this.show_prob_index).toString())
+                prob.classList.add('test_submit')
+                this.$message.success('上传成功!')
+            },
+            /*test_upload() {
+                this.$message.success('上传成功')
+            },*/
+            testSubmitUpload(prob_nid_list) {
+                {#// 成功上传(注意不应该在提交这弄)一题就应该把右侧index框变成绿色#}
+                {#let prob = document.getElementById((this.show_prob_index).toString())#}
+                {#prob.classList.add('test_submit')#}
+                // 提交就是执行上传的代码, 在myTestUploadSuccess里把返回的文件地址记录一下, 再此传给后端
+
+                // 判断哪些题目没写, 若都没写不予提交, 若至少写了一题, 则提示一下
+                {#const formdata = new FormData()#}
+                {#formdata.append('time', this.test_time_stamp)#}
+                {#formdata.append('path', this.test_prob_upload_path)#}
+                post_data = {
+                    'time': this.test_time_stamp,
+                    'path': this.test_prob_upload_path,
+                    'prob_nid_list': prob_nid_list,
+                }
+                axios.post('/api/testProblemExecute/', post_data).then(res => {
+                  if (res.data.code === 200) {
+                    // 此处是两个data, 外层data是res自带的, 内层data才是我后端发送的
+                    this.test_prob_result = res.data.data.prob_result
+                    this.$message.success('提交成功')
+                    this.resultDialogVisible = true
+                  } else {
+                    this.$message.error(res.msg || res.message || '提交失败!')
+                  }
+                }).catch((err) => {
+                    this.$message.error(err.message || '提交出错!')
+                })
+            },
+            // 初始化ACE Editor
+            initACEEditor(){
+                // ACE Editor
+                //初始化id字符串（不加#）
+                this.editor = ace.edit('ace_editor_body');
+                this.editor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true,
+                    enableLiveAutocompletion: true
+                    });
+                //设置主题
+                this.editor.setTheme("ace/theme/github");
+                // 设置编辑语言
+                this.editor.getSession().setMode("ace/mode/python")
+                // 设置字体大小
+                this.editor.setFontSize(16)
+                // 设置行高;
+                document.getElementById("ace_editor_body").style.lineHeight="20px";
+                // 移动光标至第0行，第0列
+                this.editor.moveCursorTo(0, 0);
+
+                //设置只读（true时只读，用于展示代码）
+                this.editor.setReadOnly(false);
+                //自动换行,设置为off关闭
+                this.editor.setOption("wrap", "free");
+                //5.设置编辑内容
+                var editorValue='def function():\n' +
+                        '    return "hello"\n' +
+                        '\nif __name__ == \'__main__\':\n' +
+                        '    print(function())';
+                this.editor.setValue(editorValue);
+                //撤销：
+                // editor.undo();
+                //查找替换：
+                // editor.execCommand('replace');
+                //编辑内容搜索
+                //editor.execCommand('find');//与ctrl+f功能一致
+                //自动换行 关闭时free换成off
+                this.editor.setOption("wrap", "free");
+                //获取编辑内容
+                //editor.getValue();
+                //是否显示边距线
+                this.editor.setShowPrintMargin(false);
+            },
+            // ACE Editor执行代码按钮功能
+            executeACEEditor(){
+                let pythonStr=this.editor.getValue()
+                let post_data = {
+                    'time': 123,
+                    'python_str': pythonStr,
+                }
+                axios.post('/api/aceProblemExecute/', post_data).then(res => {
+                    console.log(res.data.data)
+                    if (res.data.code === 200) {
+                        // 此处是两个data, 外层data是res自带的, 内层data才是我后端发送的
+                        document.getElementById('ace_result_p').innerHTML = res.data.data
+                    } else {
+                        // 没写在vue里, 所以this指向有点问题
+                        // 待会把代码移到vue里即可
+                        //this.$message.error(res.msg || res.message || '提交失败!')
+                    }
+                }).catch((err) => {
+                    //this.$message.error(err.message || '提交出错!')
+                })
+                //在线运行
+                /*
+                var submit = document.querySelector('#ace_submit');
+                submit.addEventListener('click',function(){
+                    var pythonStr=editor.getValue()
+                    post_data = {
+                        'time': 123,
+                        'python_str': pythonStr,
+                    }
+                    axios.post('/api/aceProblemExecute/', post_data).then(res => {
+                        console.log(res.data.data)
+                        if (res.data.code === 200) {
+                            // 此处是两个data, 外层data是res自带的, 内层data才是我后端发送的
+                            document.getElementById('ace_result_p').innerHTML = res.data.data
+                        } else {
+                            // 没写在vue里, 所以this指向有点问题
+                            // 待会把代码移到vue里即可
+                            //this.$message.error(res.msg || res.message || '提交失败!')
+                        }
+                    }).catch((err) => {
+                        //this.$message.error(err.message || '提交出错!')
+                    })
+                });*/
+            }
+        }
+    })
+
+    // 获取需要轮播的div
+    let menu_img = document.querySelectorAll('.dynamic_shuffl')
+    {#console.log(menu_img)#}
+    // 获取它的长度
+    let menu_length = menu_img.length
+    // 初始位置
+    let index = 0
+    // 给轮播图header.html加了title后,
+    // 伪类选择器选第一个元素失效了, 但能选择最后一个元素
+    // 此处就用js在初始时把第一个元素的opacity设为1
+    menu_img[index].style.opacity = 1
+    // 每次都清除定时器
+    let timer = null
+    clearInterval(timer)
+    timer = setInterval(()=>{
+        // 初始显示的是第一张图片, 所以这里直接++显示第二张
+        index ++
+        // 到达最大长度, 表示所有图片都轮播过一次了
+        if(index === menu_length){
+            index = 0
+        }
+        // 样式复原, 都不显示
+        for (let i of menu_img) {
+        i.style.opacity = 0 // 把所有div透明度设置为0, 不显示
+        }
+        // 此处再设置显示特定的
+        menu_img[index].style.opacity = 1
+    }, 6000)
+
+    // 动态导航条
+    let nav = document.querySelector('.nav_bg')
+    // 监听滚动时事件
+    window.onscroll = function () {
+        let top = document.documentElement.scrollTop
+        if (top >= 300){
+            // 当滚动了300高度时给滚动条加上show类
+            nav.classList.add('show')
+        }else {
+            nav.classList.remove('show')
+        }
+    }
+</script>
+{% block js %}
+<!-- 预留用于editor-md脚本 -->
+{% endblock %}
+</body>
+</html>

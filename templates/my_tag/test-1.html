@@ -1,0 +1,62 @@
+{% extends 'problem.html' %}
+
+{% block css %}
+    <!-- editor-md样式, 保证在article.css上面 -->
+    <link rel="stylesheet" href="/static/my/css/problem.css">
+    <!-- 主要是引入pager样式 -->
+    <link rel="stylesheet" href="/static/my/css/test.css">
+{% endblock %}
+
+{% block main %}
+    <div id="position" class="problem">
+        <div  v-show="{{  test_prob_dict_list.0.index }} === show_prob_index">
+            <div class="problem_title">
+            <h2>{{ test_prob_dict_list.0.prob.title }}</h2>
+            <p>
+                <span>难度：<i class="difficult">困难</i></span>
+                <span>发布时间：<i>2022-2-12{{ article.create_date|date:'Y-m-d' }}</i></span>
+                <span>来源：<i>{{ None |default_if_none:"无" }}</i></span>
+            </p>
+            <div>
+                <i title="知识点" class="fas fa-tags"></i>
+                <!-- 正向遍历获取article.tag表, .all获取所有tag -->
+{#                {% for tag in article.tag.all %}#}
+{#                    <i>{{ tag.title }}</i>#}
+{#                {% endfor %}#}
+                    <i>知识点1</i>
+                    <i>知识点2</i>
+                    <i>知识点3</i>
+            </div>
+        </div>
+            {% include test_prob_dict_list.0.html %}
+        </div>
+        <div class="submit">
+            <el-upload
+              class="upload-demo"
+              ref="upload"
+              action="/api/testProblemUpload/"
+              :headers="headerObj"
+              :on-change="testHandleChange"
+              :on-success="testUploadSuccess"
+              :file-list="testFileDict[{{ pager.current_page }}]"
+              :auto-upload="true">
+              <!-- 三元组class需要前面加:动态绑定 -->
+              <el-button :class="[{{ pager.current_page }} === 15?'':'alter_pos']" slot="trigger" size="small" type="primary">上传文件</el-button>
+              <el-button  v-if="{{ pager.current_page }} === 15" style="margin-left: 10px;" size="small" type="success" @click="testSubmitUpload">提交</el-button>
+              <div slot="tip" class="el-upload__tip">
+                  只能上传py文件，且不超过500kb
+              </div>
+            </el-upload>
+            <!--
+            <button @click="test_upload">上传</button>
+            <button  v-show="\{\{ pager.current_page }} === 15" @click="test_submit">提交</button>
+            -->
+        </div>
+        <!-- 提交按钮的上传文件存放路径改成user/test/01 -->
+        <!-- 加个分页器 -->
+        <ul class="pager">
+            {{ pager.page_html|safe }}
+        </ul>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,35 @@
+ *{margin:0;padding:0;box-sizing: border-box;}
+    #wrapper{
+    	width:1310px;
+    	margin:20px auto 0 auto;}
+    #left{float:left;}
+    #right{float:right;}
+    #edit{
+    	min-height:500px;
+    	width:650px;
+    	margin-right:10px;
+    }
+    #preview{
+    	min-height:500px;
+    	width:650px;
+		border:1px solid #000;
+	}
+.l-head,.r-head{
+	height: 35px;
+	background:#161616;
+	width:650px;
+	color:#fff;
+	line-height:35px;
+	font-size:12px;}
+.l-head h2,.r-head h2{text-indent: 2em;float:left;}
+#submit{clear: both;
+	height: 45px;
+	line-height: 45px;
+	font-size: 20px;
+	color: #fff;
+	text-align:center;
+	background-color:#161616;
+	cursor:pointer;}
+#theme{font-size:14px;float:right;}
+#theme span{margin-right:15px;cursor:pointer;}
+.bhys{font-weight:bold;}

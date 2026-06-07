@@ -1,0 +1,354 @@
+.left {
+  //border-radius: 15px 0 0 15px;
+  border-radius: 15px;
+}
+.right {
+  //border-radius: 0 15px 15px 0;
+  border-radius: 15px;
+}
+
+.report {
+  width: 100%;
+  min-height: 600px;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .report_chart_prob{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    position: relative;
+
+    .divide_line {
+      width: 1px;
+      height: 94%;
+      position: absolute;
+      top: 3%;
+      left: 50%;
+      background-color: #e5e5e5;
+    }
+
+    .left, .right {
+      width: calc(50% - 40px);
+      min-height: 600px;
+      padding: 20px 20px 0 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      background-color: white;
+      .title {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        span{
+          cursor: pointer;
+          &:hover {
+            color: #409eff;
+          }
+        }
+      }
+      .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .left {
+      border-radius: 15px 0 0 15px;
+    }
+    .right {
+      border-radius: 0 15px 15px 0;
+      .content {
+        position: relative;
+        .dropdown_menu {
+          width: 150px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          // https://blog.csdn.net/weixin_57607714/article/details/123991059
+          // 不加这个, 后面的覆盖了按钮, 点击不了了
+          z-index: 99;
+        }
+      }
+    }
+  }
+
+  .report_chart_concept{
+    width: 100%;
+    min-height: 600px;
+    padding: 20px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 15px;
+
+    .title {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      span{
+        cursor: pointer;
+        &:hover {
+          color: #409eff;
+        }
+      }
+    }
+    .content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .report_top {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+
+    .left {
+      background-color: white;
+      width: calc(50% - 50px);
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      margin-right: 10px;
+      padding: 20px 20px;
+      .title {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        span{
+          cursor: pointer;
+          &:hover {
+            color: #409eff;
+          }
+        }
+      }
+      .content {
+        // 由于饼图图例存在, 左右显示不对齐了, 左边加上padding
+        padding-left: 40px;
+        width: calc(100% - 40px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .right {
+      background-color: white;
+      width: calc(50% - 40px);
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding: 20px 20px;
+
+      .content {
+        width: 100%;
+        background-color: white;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        >p {
+          margin-bottom: 5px;
+          font-size: 20px;
+          // 设置行间距  字体大小的1.5倍
+          line-height: 150%;
+          &:last-child {
+            margin-bottom: 0;
+          }
+          >span {
+            // color: #d5b1dc;
+            color: #50a3d1;
+            // 左右间隔
+            margin: 0 2px 0 2px;
+            // 给文本加下划线
+            // text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+
+  .report_center {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+
+    .left {
+      width: calc(50% - 40px);
+      background-color: white;
+      min-height: 400px;
+      margin-right: 10px;
+      padding: 20px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+
+      .content {
+        width: 100%;
+        background-color: white;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+        p {
+          margin-bottom: 1px;
+          font-size: 20px;
+          // 设置行间距  字体大小的1.5倍
+          line-height: 150%;
+        }
+        .simulation_test {
+          height: 100%;
+          display: flex;
+          //justify-content: center;
+          justify-content: flex-start;
+          align-items: center;
+          flex-direction: column;
+          p {
+            font-size: 40px;
+            //line-height: 3em;
+          }
+          p:first-child {
+            margin-top: 50px;
+          }
+          :nth-child(2){
+            color: #00aeec;
+          }
+          p:last-child {
+            font-size: 85px;
+            color: red;
+          }
+        }
+      }
+    }
+
+    .right {
+      background-color: white;
+      width: calc(50% - 40px);
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding: 20px 20px;
+      .title {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        span{
+          cursor: pointer;
+          &:hover {
+            color: #409eff;
+          }
+        }
+      }
+      .test_concept_radar_charts_option {
+        width: 100%;
+        background-color: white;
+        min-height: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  .report_bottom {
+    width: calc(100% - 40px);
+    min-height: 250px;
+    background-color: white;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    position: relative;
+    border-radius: 15px;
+
+    .title {
+      margin-bottom: 5px;
+      //position: relative;
+      //// 控制与下面线的距离
+      //padding: 0 0 5px 0;
+      //
+      //// 构造一条线的效果
+      //&:after {
+      //  display: block;
+      //  content: "";
+      //  width: 100%;
+      //  height: 1px;
+      //  background-color: #e5e5e5;
+      //  position: absolute;
+      //  bottom: 0;
+      //  left: 0;
+      //}
+    }
+
+    .content {
+      width:100%;
+      min-height: 200px;
+      display: flex;
+      justify-content: space-around;
+      box-sizing: border-box;
+      .left, .right {
+        width:30%;
+        border-radius: 5px;
+        border: 1px solid #e5e5e5;
+        padding: 20px 30px;
+        display: flex;
+        >ul {
+          display: flex;
+          justify-content: center;
+          align-items: self-start;
+          flex-direction: column;
+        }
+      }
+      .left {
+        margin-right: 5px;
+      }
+    }
+
+    >h1 {
+      font-size: 25px;
+      word-wrap: break-word;
+      letter-spacing: 20px;
+      // https://www.csdn.net/tags/NtTaUgzsNTI4OTctYmxvZwO0O0OO0O0O.html
+      // https://blog.csdn.net/weixin_42525211/article/details/118150166
+      // 竖着显示文字
+      writing-mode: vertical-lr;
+    }
+    .weakness {
+      position: absolute;
+      top: 30%;
+      left: 45%;
+    }
+    .improve {
+      position: absolute;
+      top: 30%;
+      left: 52%;
+    }
+    .divide_line {
+      width: 1px;
+      height: 94%;
+      position: absolute;
+      top: 3%;
+      left: 50%;
+      background-color: #e5e5e5;
+    }
+  }
+}

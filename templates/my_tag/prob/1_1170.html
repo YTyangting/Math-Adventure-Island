@@ -1,0 +1,58 @@
+<div class="post">
+ <div class="prob-titile">
+  6-1 改错题
+ </div>
+ <div class="post-content">
+  <h3>
+   题目描述
+  </h3>
+  <div class="lead2">
+   <pre><code>统计一个字符串（长度不超过100）中包含的字母串个数并找出其中最长的字母串。所谓字母串是指一个连续字母序列（不区分大小写），字母串之间用非字母字符分隔。
+函数count的功能是统计p指向的字符串中包含的字母串个数，并将找出的最长字母串存放在pmax指向的数组中，函数返回字母串的个数。
+【含有错误的源程序】
+#include&lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;ctype.h&gt;
+int count(char p[],char pmax[])
+{  int j=0,k,m=0;
+   char temp[100];
+   while(*p)
+   {  while((!isalpha(*p))&amp;&amp;*p) p++;
+      k=0;
+      if(*p!='\0')m++;
+      while(isalpha(*p))
+        temp[k++]=*p++;
+      temp[k]="\0";
+      if(k&lt;j)    {  j=k;     pmax=temp;    }
+    }
+    return m;  }
+int main()
+{  char a[100], max[100];;
+   gets(a);
+   int i;
+   i=count(a[],max[]);
+   if(i==0)
+     printf("a=%s:  No letter strings!\n",a);
+   else
+     printf("a=%s\nnumber is%d\nmax string is:%s\n",a,i,max);
+    return 0;
+}</code></pre>
+  </div>
+  <h3>
+   输入样例
+  </h3>
+  <div class="discriptfont sampleboard" id="sampleInputContent1">
+   <pre><code>you are teacher234too.
+</code></pre>
+  </div>
+  <h3>
+   输出样例
+  </h3>
+  <div class="discriptfont sampleboard" id="sampleOutputContent1">
+   <pre><code>a=you are teacher234too.
+number is 4
+max string is: teacher
+</code></pre>
+  </div>
+ </div>
+</div>

@@ -1,0 +1,308 @@
+.left {
+  border-radius: 15px;
+}
+
+.right {
+  border-radius: 15px;
+}
+
+.report {
+  width: 100%;
+  min-height: 600px;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.report .report_chart_prob {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  position: relative;
+}
+.report .report_chart_prob .divide_line {
+  width: 1px;
+  height: 94%;
+  position: absolute;
+  top: 3%;
+  left: 50%;
+  background-color: #e5e5e5;
+}
+.report .report_chart_prob .left, .report .report_chart_prob .right {
+  width: calc(50% - 40px);
+  min-height: 600px;
+  padding: 20px 20px 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: white;
+}
+.report .report_chart_prob .left .title, .report .report_chart_prob .right .title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.report .report_chart_prob .left .title span, .report .report_chart_prob .right .title span {
+  cursor: pointer;
+}
+.report .report_chart_prob .left .title span:hover, .report .report_chart_prob .right .title span:hover {
+  color: #409eff;
+}
+.report .report_chart_prob .left .content, .report .report_chart_prob .right .content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.report .report_chart_prob .left {
+  border-radius: 15px 0 0 15px;
+}
+.report .report_chart_prob .right {
+  border-radius: 0 15px 15px 0;
+}
+.report .report_chart_prob .right .content {
+  position: relative;
+}
+.report .report_chart_prob .right .content .dropdown_menu {
+  width: 150px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+.report .report_chart_concept {
+  width: 100%;
+  min-height: 600px;
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  background-color: white;
+  border-radius: 15px;
+}
+.report .report_chart_concept .title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.report .report_chart_concept .title span {
+  cursor: pointer;
+}
+.report .report_chart_concept .title span:hover {
+  color: #409eff;
+}
+.report .report_chart_concept .content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.report .report_top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+.report .report_top .left {
+  background-color: white;
+  width: calc(50% - 50px);
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-right: 10px;
+  padding: 20px 20px;
+}
+.report .report_top .left .title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.report .report_top .left .title span {
+  cursor: pointer;
+}
+.report .report_top .left .title span:hover {
+  color: #409eff;
+}
+.report .report_top .left .content {
+  padding-left: 40px;
+  width: calc(100% - 40px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.report .report_top .right {
+  background-color: white;
+  width: calc(50% - 40px);
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 20px 20px;
+}
+.report .report_top .right .content {
+  width: 100%;
+  background-color: white;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.report .report_top .right .content > p {
+  margin-bottom: 5px;
+  font-size: 20px;
+  line-height: 150%;
+}
+.report .report_top .right .content > p:last-child {
+  margin-bottom: 0;
+}
+.report .report_top .right .content > p > span {
+  color: #50a3d1;
+  margin: 0 2px 0 2px;
+}
+.report .report_center {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+.report .report_center .left {
+  width: calc(50% - 40px);
+  background-color: white;
+  min-height: 400px;
+  margin-right: 10px;
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.report .report_center .left .content {
+  width: 100%;
+  background-color: white;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+.report .report_center .left .content p {
+  margin-bottom: 1px;
+  font-size: 20px;
+  line-height: 150%;
+}
+.report .report_center .left .content .simulation_test {
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+.report .report_center .left .content .simulation_test p {
+  font-size: 40px;
+}
+.report .report_center .left .content .simulation_test p:first-child {
+  margin-top: 50px;
+}
+.report .report_center .left .content .simulation_test :nth-child(2) {
+  color: #00aeec;
+}
+.report .report_center .left .content .simulation_test p:last-child {
+  font-size: 85px;
+  color: red;
+}
+.report .report_center .right {
+  background-color: white;
+  width: calc(50% - 40px);
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 20px 20px;
+}
+.report .report_center .right .title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.report .report_center .right .title span {
+  cursor: pointer;
+}
+.report .report_center .right .title span:hover {
+  color: #409eff;
+}
+.report .report_center .right .test_concept_radar_charts_option {
+  width: 100%;
+  background-color: white;
+  min-height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.report .report_bottom {
+  width: calc(100% - 40px);
+  min-height: 250px;
+  background-color: white;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  position: relative;
+  border-radius: 15px;
+}
+.report .report_bottom .title {
+  margin-bottom: 5px;
+}
+.report .report_bottom .content {
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  justify-content: space-around;
+  box-sizing: border-box;
+}
+.report .report_bottom .content .left, .report .report_bottom .content .right {
+  width: 30%;
+  border-radius: 5px;
+  border: 1px solid #e5e5e5;
+  padding: 20px 30px;
+  display: flex;
+}
+.report .report_bottom .content .left > ul, .report .report_bottom .content .right > ul {
+  display: flex;
+  justify-content: center;
+  align-items: self-start;
+  flex-direction: column;
+}
+.report .report_bottom .content .left {
+  margin-right: 5px;
+}
+.report .report_bottom > h1 {
+  font-size: 25px;
+  word-wrap: break-word;
+  letter-spacing: 20px;
+  writing-mode: vertical-lr;
+}
+.report .report_bottom .weakness {
+  position: absolute;
+  top: 30%;
+  left: 45%;
+}
+.report .report_bottom .improve {
+  position: absolute;
+  top: 30%;
+  left: 52%;
+}
+.report .report_bottom .divide_line {
+  width: 1px;
+  height: 94%;
+  position: absolute;
+  top: 3%;
+  left: 50%;
+  background-color: #e5e5e5;
+}
+
+/*# sourceMappingURL=report.css.map */

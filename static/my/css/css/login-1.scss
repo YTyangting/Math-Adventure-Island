@@ -1,0 +1,197 @@
+body {
+  width: 100%;
+  // 此处高度是视窗高度
+  height: 100vh;
+
+  #app {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+main {
+  width: 500px;
+  min-height: 700px;
+  background-color: white;
+  // 相对自己位移0,0  发散5px  颜色黑色透明度0.2
+  box-shadow: 0 0 8px rgb(0, 0, 0, 0.2);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  .top {
+    padding: 40px 20px 20px 20px;
+
+    .title {
+      text-align: center;
+      font-size: 20px;
+      position: relative;  // 自己加的用于控制返回首页样式
+
+      // 自己加的用于控制返回首页样式
+      .login_sign_back {
+        position: absolute;
+        top: -28px;
+        right: 0;
+        font-size: 16px;
+        >a {
+          color: #409eff;
+          text-decoration: underline;
+        }
+      }
+
+      .login_sign {
+        p {
+          color: #808595;
+        }
+        // 如果a有active这个类的话
+        p.active {
+          color: #0d8fe0;
+        }
+      }
+    }
+
+    //h2 {
+    //  color: #26c6da;
+    //  display: flex;
+    //  justify-content: center;
+    //}
+
+    .login_forms {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+
+      // 此处就不使用>input子类选择器, 而是直接input后代选择器
+      input {
+        margin-bottom: 20px;
+
+        border: 1px solid #f0eeee;
+        outline: none;
+        height: 40px;
+        border-radius: 5px;
+
+        // input内部文字据左边20px
+        padding-left: 20px;
+
+        // input获得焦点时, 边框颜色变化
+        transition: all 0.3s;
+        &:focus {
+          border: 1px solid #26c6da;
+        }
+      }
+      // 在注册界面, 给每个input加上sign_input类属性,
+      // 修改下margin-bottom, 防止挡住下面图片
+      input.sign_input {
+        margin-bottom: 15px;
+      }
+
+      .code {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+
+        input {
+          width: 50%;
+        }
+
+        img {
+          height: 42px;
+          border-radius: 5px;
+          cursor: pointer;
+          border: 1px solid #f0eeee;
+        }
+      }
+
+      >button {
+        height: 40px;
+        color: white;
+        border: none;
+        cursor: pointer;
+        background-color: #26c6da;
+        border-radius: 5px;
+      }
+
+      .go_sign {
+        position: absolute;
+        bottom: 353px;
+        right: 20px;
+
+        font-size: 16px;
+        >a {
+          color: #409eff;
+          text-decoration: underline;
+        }
+      }
+      .go_login {
+        position: absolute;
+        bottom: 312px;
+        right: 20px;
+
+        font-size: 16px;
+        >a {
+          color: #409eff;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .other_login {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+
+      >p {
+        font-size: 14px;
+        color: #808595;
+      }
+      // 通过伪元素构造p前后两条线
+      &::before {
+        position: absolute;
+        content: '';  // 为元素要想显示, 须有这个
+        display: block;
+        width: 100%;
+        height: 1px;
+        background-color: #808595;
+        left: 0;
+        top: 20px;
+      }
+      //&::after {
+      //  position: absolute;
+      //  content: '';  // 为元素要想显示, 须有这个
+      //  display: block;
+      //  width: 200px;
+      //  height: 1px;
+      //  background-color: #808595;
+      //  right: 0;
+      //  top: 8px;
+      //}
+
+      >div {
+        margin-top: 30px;
+        img {
+          width: 30px;
+          margin-right: 10px;
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .bottom {
+    img {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 270px;
+    }
+  }
+}

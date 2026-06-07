@@ -1,0 +1,59 @@
+<div class="post">
+ <div class="prob-titile">
+  硕哥的布尔式
+ </div>
+ <div class="post-content">
+  <h3>
+   题目描述
+  </h3>
+  <div class="lead2">
+   <pre><code><p>硕哥学了表达式求值，于是他开始思考一些这方面的问题。</p>
+
+<p>首先输入T，表示数据组数。接下来T行，每行一个字符串，包括x,X,0,1,|,&amp;,^,(,)。其中x是布尔变量，X是x取反的值。|,&amp;,^是三种位运算，或，与，异或。输入的表达式保证每一次运算都被括号包裹。例如，"1"，"(x^0)"，"((X&amp;0)|x)"这些表示是合法的。而例如"(1)"，"x^0"，"(X&amp;0|x)"这些非法的表达式则不会出现。现在你可以将一个字符串中的每个符号修改为别的符号使其值与x的取值无关。求最少修改数。（注意，所有符号都能修改，但不能加入或者删除符号）</p>
+
+<p>样例解释</p>
+
+<p>对于第一个样例，将"X"改为"1"即可。<br/>
+对于第二个样例，不用改变，因为其值恒为0。<br/>
+对于第三个样例，不用改变，因为其值恒为1。<br/>
+对于第一个样例，将"((1^(X&amp;X))|x)"改为"((0^(X&amp;X))|x)"即可，这样其值恒为1。（x为0时和x为1时结果都是1）</p>
+</code></pre>
+  </div>
+  <h3>
+   输入格式
+  </h3>
+  <div class="lead2">
+   <pre><code>第一行一个整数T，表示数据组数。
+第二行到第T+1行，每行一个字符串s。
+对于100%的数据，满足T&lt;=500，1&lt;=字符串长度&lt;=300</code></pre>
+  </div>
+  <h3>
+   输出格式
+  </h3>
+  <div class="lead2">
+   <pre><code>对于每组数据，输出一行。
+首先是“Case #”，然后输出数据序号，最后输出结果。具体参见样例。（注意严格按照输出样例中的格式输出）</code></pre>
+  </div>
+  <h3>
+   输入样例
+  </h3>
+  <div class="discriptfont sampleboard" id="sampleInputContent1">
+   <pre><code>4
+X
+0
+(x|1)
+((1^(X&amp;X))|x)
+</code></pre>
+  </div>
+  <h3>
+   输出样例
+  </h3>
+  <div class="discriptfont sampleboard" id="sampleOutputContent1">
+   <pre><code>Case #1: 1
+Case #2: 0
+Case #3: 0
+Case #4: 1
+</code></pre>
+  </div>
+ </div>
+</div>

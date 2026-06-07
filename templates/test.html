@@ -1,0 +1,131 @@
+{% extends 'problem.html' %}
+
+{% block css %}
+    <!-- editor-md样式, 保证在article.css上面 -->
+    <link rel="stylesheet" href="/static/my/css/problem.css">
+    <!-- 主要是引入pager样式 -->
+    <link rel="stylesheet" href="/static/my/css/test.css">
+{% endblock %}
+
+{% block main %}
+    <div class="test_main">
+        <div class="left">
+            <div id="position" class="problem">
+                {% for test_prob_dict in test_prob_dict_list %}
+                    <div  v-show="{{  test_prob_dict.index }} === show_prob_index">
+                        <div class="problem_title">
+                            <h2>{{ test_prob_dict.prob.id }}</h2>
+                            <p>
+                                <!--<span>难度：<i class="difficult">困难</i></span>-->
+                                <span>难度：
+                                    <!-- v-show和CSS规则如 [v-cloak] { display: none } 一起用时, 不会刷新时短暂存在
+                                         https://segmentfault.com/q/1010000009302077/-->
+                                    <i v-show="{{ test_prob_dict.prob.difficulty }} == 0" style="color: #00b7c5" v-cloak>简单</i>
+                                    <i v-show="{{ test_prob_dict.prob.difficulty }} == 1" style="color: #ffb800" v-cloak>中等</i>
+                                    <i v-show="{{ test_prob_dict.prob.difficulty }} == 2" style="color: #ff2d55" v-cloak>困难</i>
+                                </span>
+                                <span>发布时间：<i>2024-8-2{{ article.create_date|date:'Y-m-d' }}</i></span>
+                                <span>来源：<i>{{ None |default_if_none:"无" }}</i></span>
+                            </p>
+                            <div><i title="知识点" class="fas fa-tags"></i>
+                                    {% for problem_concept in test_prob_dict.problem_concepts %}
+                                        <i>{{ problem_concept.concept.name }}</i>
+                                    {% endfor %}</div>
+                        </div>
+                          <div class="post-content">
+                              <h3>题目描述</h3>
+                              <div class="lead2">
+                                <pre><code>{{test_prob_dict.prob.desc}}</code></pre></div>
+                            <h3>解题过程格式示例</h3>
+                                <div class="lead2">
+                                    <pre><code>x=[(8*3.5+6*3.5)*2-16]/2*1</code></pre></div>
+                        <h3>解题答案格式示例</h3>
+                        <div class="lead2">
+                            <pre><code>45</code></pre></div>
+                
+            {% block prev_next %}
+                <div class="prev_next_prob">
+                    <div class="pn_content">
+                        <!-- https://www.pythonheidong.com/blog/article/1477974/b9c3a7f3f5548da00434/
+                             my_tag.py弄一个toString过滤器, 不然后端传入的'#'会变成#, 不是字符了, 会报错
+                             多加两个a标签, 不然第一题左边没有东西, 下一题的a标签会跑到左边 -->
+                        <button v-show="show_prob_index === 0" v-cloak>已经是第一题了</button>
+                        <button class="prev_next_btn" v-show="show_prob_index !== 0" @click="changeTestIndex(show_prob_index - 1)" v-cloak>上一题</button>
+                        <button class="prev_next_btn" v-show="show_prob_index !== {{ count }}" @click="changeTestIndex(show_prob_index + 1)" v-cloak>下一题</button>
+                        <button v-show="show_prob_index === {{ count }}" v-cloak>做完这些你已经够强了</button>
+                        <!--<a v-show="{\{ next_html_name|toString }} === '#'">已经是最后一题了</a>-->
+                    </div>
+                </div>
+            {% endblock %}
+              </div>
+        </div>
+                    
+         {% endfor %}   
+            <div class="post-content">
+                <div><h3>解题过程与结果</h3></div>
+                </div>
+                <div class="ace_editor">
+                    <div id="ace_editor_body"></div>
+                </div>
+                <div class="submit">
+                    <button class="submit_btn" @click="exectueAceCode({{ prob_nid_list }}, 'test_submit', 'test')">提交</button>
+                </div>
+             </div>
+        </div>
+        <div class="right">
+            <div class="test_prob">
+                <div class="final_submit_test">
+                <!-- v-loading.fullscreen.lock是用于指令方式加载动画的 -->
+                <button class="final_submit_test_btn"
+                        v-loading.fullscreen.lock="fullscreenLoading"
+                        @click="exectueAceCode({{ prob_nid_list }}, 'final_submit', 'test')">提交试卷</button>
+            </div>
+                <ul>
+                {% for index in index_list %}
+                    <!-- v-cloak用在此处还是有问题 v-show和CSS规则如
+                    [v-cloak] { display: none } 一起用时, 不会一开始时短暂存在-->
+                    <!-- 注意这里不能给li的class用三元组赋值, 这会覆盖用js代码添加的类标签 -->
+                    <li id="{{ index }}" v-cloak>
+                        <div @click="changeTestIndex({{ index }})">
+                            {{ index |add:1 }}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            </div>
+            {% block timer %}
+            
+            {% endblock %}
+        </div>
+   
+    <!-- v-show和CSS规则如
+    [v-cloak] { display: none } 一起用时, 不会一开始时短暂存在-->
+    
+    <el-dialog
+      :visible.sync="resultDialogVisible"
+      width="50%"
+      :close-on-click-modal="false"
+      :before-close="handleResultDialogClose"
+      title="测验结果"
+      v-cloak>
+      <div class="ace_result">
+        <ul class="ace_result_p">
+          <li v-for="(value, i) in ace_prob_result" :key="i">
+            <h2>
+                第[[ i+1 ]]题：<span  :class="[value.pass === 'CE'?'ce_style':'ac_style']">[[ value.pass ]]</span>
+            </h2>
+          </li>
+        </ul>
+    </div>
+      <span slot="footer" class="dialog-footer">
+        <!--
+        <el-button @click="resultDialogVisible = false">取 消</el-button>
+        -->
+        <el-button type="primary" @click="resultDialogGoOn">继续测试</el-button>
+        <el-button type="warning" @click="resultDialogGoToReport">前去查看报告</el-button>
+      </span>
+    </el-dialog>
+   
+     </div>
+{% endblock %}
+

@@ -1,0 +1,1 @@
+AAA=fopen("data\\data\\Input\\input0.txt","r",stdin);

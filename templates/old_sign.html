@@ -1,0 +1,27 @@
+{% extends 'login.html' %}
+
+{% block title %}
+    <title>个人博客|用户注册</title>
+{% endblock %}
+
+
+{% block main_title %}
+{#    <a href="/login">登录</a> / #}
+    <p class="active">注册</p>
+{% endblock %}
+
+
+{% block form %}
+    <input type="text" ref="sign_form_name" v-model="sign_form.name" placeholder="请输入用户名" class="sign_input">
+    <input type="password" ref="sign_form_pwd" v-model="sign_form.pwd" placeholder="请输入密码" class="sign_input">
+    <input type="password" ref="sign_form_re_pwd" v-model="sign_form.re_pwd" placeholder="请再次确认密码" class="sign_input">
+{#    <div class="code">#}
+{#        <input type="text" ref="sign_form_code" v-Model="sign_form.code" placeholder="请输入验证码" class="sign_input">#}
+{#        <img @click="get_random_code" src="/static/my/img/login/code.png" alt="">#}
+{#        <img @click="get_random_code" src="/login/random_code/" alt="">#}
+{#    </div>#}
+    <button @click="sign">注册</button>
+    <div class="go_login">
+        <a href="/login">已有账号?点击登录</a>
+    </div>
+{% endblock %} v-model=sign_form.name

@@ -1,0 +1,21 @@
+{% extends 'test.html' %}
+
+{% block css %}
+    <!-- editor-md样式, 保证在article.css上面 -->
+    <link rel="stylesheet" href="/static/my/css/problem.css">
+    <!-- 主要是引入pager样式 -->
+    <link rel="stylesheet" href="/static/my/css/test.css">
+    <link rel="stylesheet" href="/static/my/css/simulation.css">
+{% endblock %}
+
+{% block timer %}
+    <div class="show_time card" v-cloak>
+        <div class="hexo_electric_clock">
+          <div class="clock-row">
+              <div class="card-clock-time">
+                  <span id="simulation-timer">[[ showRemainSimulationTime ]]</span>
+              </div>
+          </div>
+        </div>
+    </div>
+{% endblock %}

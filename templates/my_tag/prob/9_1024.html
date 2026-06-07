@@ -1,0 +1,75 @@
+<div class="post">
+ <div class="prob-titile">
+  14-1 改错题
+ </div>
+ <div class="post-content">
+  <h3>
+   题目描述
+  </h3>
+  <div class="lead2">
+   <pre><code>对n行n列（n&lt;10）二维数组的每一行排序，偶数行(0当作偶数)由小到大排序，奇数行由大到小排序。
+【含有错误的源程序】
+#include &lt;stdio.h&gt; 
+#define N=4
+void swap(int *p1, int *p2)
+{
+    int p;
+    p=p1; p1=p2; p2=p;
+}
+void sort(int a[N][N])
+{
+    int i,j,k;
+    for(i=0; i&lt;N; i++)
+        for(j=0; j&lt;N; j++)
+            for(k=j+1; k&lt;N; k++)
+                if(i%2=0)
+                {
+                    if(a[i][j]&gt;a[i][k])
+                        swap(a[i]+j,a[i]+k);
+                }
+                else
+                {
+                    if(a[i][j]&lt;a[i][k])
+                        swap(a[i]+j,a[i]+k);
+                }
+}
+int main()
+{
+    int a[N][N];
+    for(i=0; i&lt;N; i++)
+        for(j=0; j&lt;N; j++)
+            scanf("%d", &amp;a[i][j]);
+    sort(a[N][N]);
+    int i,j;
+    for(i=0; i&lt;N; i++)
+    {
+        for(j=0; j&lt;N; j++)
+            printf("%5d", a[i][j]);
+        printf("\n"); 
+    }
+    return 0;
+}</code></pre>
+  </div>
+  <h3>
+   输入样例
+  </h3>
+  <div class="discriptfont sampleboard" id="sampleInputContent1">
+   <pre><code>4
+3   4   2    1
+8   7   5    6
+12  10  11   9
+15  14  16   13
+</code></pre>
+  </div>
+  <h3>
+   输出样例
+  </h3>
+  <div class="discriptfont sampleboard" id="sampleOutputContent1">
+   <pre><code>1   2   3  4
+8   7   6  5
+9  10  11  12
+16  15  14  13
+</code></pre>
+  </div>
+ </div>
+</div>

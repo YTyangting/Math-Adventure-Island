@@ -1,0 +1,185 @@
+
+.problem {
+  width: 1200px;
+  position: relative;
+
+  // 自己获取下html题目的标题, 自定义加入知识点等
+  .problem_title {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: white;
+      margin-bottom: 2px;
+
+      h2 {
+        // 上下  左右
+        margin: 10px 0;
+        font-size: 25px;
+      }
+
+      p {
+        font-size: 14px;
+        color: #333333;
+
+        span {
+          margin-right: 10px;
+          .difficult {
+            color: #dd6161;
+          }
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+
+      >div {
+        margin: 10px 0;
+        i {
+          font-size: 14px;
+          margin-right: 5px;
+          color: #409eff;
+          &:first-child {
+            color: #333333;
+          }
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  // 原HTML自带的标题设为None
+  .prob-titile {
+    display: none;
+    //height: 50px;
+    //display: flex;
+    //flex-direction: column;
+    //align-items: center;
+    //justify-content: center;
+    //background-color: white;
+    //font-size: 20px;
+    //color: #333333;
+    //font-weight: 600;
+    //// 通过伪元素构造线的样式
+    //position: relative;
+    //&:after {
+    //  display: block;
+    //  content: '';
+    //  width: 100%;
+    //  height: 1px;
+    //  background-color: #e5e5e5;
+    //  position: absolute;
+    //  bottom: 0;
+    //  left: 0;
+    //}
+}
+
+  .post-content {
+    display: block;
+    background-color: white;
+    padding: 30px;
+
+    /*h3元素与下标对应关系
+      1题目描述  3输入格式  5输出格式
+      7输入样例  9输出样例
+
+      *.lead2元素与下标对应关系
+      2题目描述  4输入格式  6输出格式
+
+      .discriptfont元素与下标对应关系
+      8输入样例  10输出样例
+    */
+    // 1题目描述
+    h3:nth-child(1){
+      font-size: 22px;
+      padding: 0 0 8px 0;  // 控制与下面线的距离
+      // 通过伪元素构造线的样式
+      position: relative;
+      &:after {
+        display: block;
+        content: '';
+        width: 100%;
+        height: 1px;
+        background-color: #e5e5e5;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+    }
+
+    // 2题目描述具体值
+    .lead2:nth-child(2){
+      padding: 30px 0;
+      pre {
+        all:initial;
+        display: block;
+        code {
+          // 有一些题目直接在code里描述题目, 没有p标签
+          // 所以这里加了一些东西
+          font-size: 16px;
+          color: black;
+          font-weight: 300;
+          img {
+            margin: 10px 30px;
+            width: 30%;
+          }
+          p {
+            font-size: 16px;
+            color: black;
+            font-weight: 300;
+          }
+        }
+      }
+    }
+
+    // 3输入格式 5输出格式 7输入样例  9输出样例
+    h3:nth-child(3), h3:nth-child(5), h3:nth-child(7), h3:nth-child(9) {
+      font-size: 16px;
+    }
+
+    // 4输入格式\6输出格式具体值
+    .lead2:nth-child(4), .lead2:nth-child(6){
+      padding: 30px 0;
+      pre {
+        all:initial;
+        display: block;
+      }
+      code {
+        font-size: 16px;
+        color: black;
+        font-weight: 300;
+      }
+    }
+
+    .discriptfont{
+      margin-top: 10px;
+      margin-bottom: 10px;
+      background-color: #f2f3f4;
+      border-radius: 5px;
+      padding: 5px 20px;
+      // box-shadow: 1px 1px 1px rgb(0 0 0 / 20%);
+
+      code {
+        display: flex;
+        align-content: center;
+        justify-items: initial;
+        font-size: 16px;
+      }
+    }
+  }
+  .submit {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 20px 20px 20px;
+    background-color: white;
+    > button {
+      width: 60px;
+      height: 40px;
+      color: white;
+      border: none;
+      cursor: pointer;
+      background-color: #00aeec;
+      border-radius: 5px;
+      margin-right: 40px;
+    }
+  }
+}

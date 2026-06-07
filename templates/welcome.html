@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎界面</title>
+    <link rel="stylesheet" href="/static/my/css/reset.css">
+    <link rel="stylesheet" href="/static/my/css/welcome.css">
+</head>
+<body>
+    <main>
+        <div class="welcome_body">
+            <h1>Welcome</h1>
+            <h2><span>智能教育平台</span></h2>
+            <p>如果您想获得更<span>优质</span>的体验</p>
+            <p>请点击下方按钮</p>
+            <button onclick="goToTest()">立即进入</button>
+            <img src="/static/my/img/weclome/think.png" alt="">
+            
+        </div>
+    </main>
+<script>
+    function goToTest(){
+        location.href = '/dl_index/'
+    }
+    function LogOut(){
+        location.href = '/logout/'
+    }
+    
+</script>
+</body>
+</html>

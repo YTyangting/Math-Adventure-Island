@@ -1,0 +1,75 @@
+{% extends 'dl_index.html' %}
+
+{# 导入自定义标签, 页面等等 #}
+{% load my_tag %}
+
+{% block css %}
+    <!-- editor-md样式, 保证在article.css上面 -->
+    <link rel="stylesheet" href="/static/my/css/problemset.css">
+{% endblock %}
+
+{% block banner %}
+    {% banner 'problemset' %}
+{% endblock %}
+
+{% block main %}
+  <div class="problem_set_parent">
+    <!-- 卡片视图区域 -->
+    <el-card>
+      <!-- 搜索与添加区域 el-row是layout布局中栅格系统 -->
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-input placeholder="请输入题目内容" v-model="queryInfo.query" clearable @clear="getProbList"
+            @keyup.enter.native="getProbList">
+            <el-button slot="append" icon="el-icon-search" @click="getProbList"></el-button>
+          </el-input>
+        </el-col>
+      </el-row>
+      <!-- 题目列表区域 -->
+      <el-table :data="probList" border stripe>
+        <el-table-column type="index" label="序号" width="100" align="center" ></el-table-column>
+          <el-table-column label="状态" prop="state" width="150" align="center">
+              <template v-slot="slot">
+                  <span v-show="slot.row.state == 0" style="color: #ff2d55">未开始</span>
+                  <span v-show="slot.row.state == 1" style="color: #00b7c5">已通过</span>
+                  <span v-show="slot.row.state == 2" style="color: #ffb800">尝试过</span>
+              </template>
+          </el-table-column>
+        <el-table-column label="题目序号" align="center">
+          <template v-slot="slot">
+            <a :href="slot.row.id" style="text-decoration: none; color:rgb(109, 111, 115)">
+              <div style="cursor: pointer;"
+                onmouseover="this.style.color='rgb(0, 122, 255)'" onmouseout="this.style.color='rgb(109, 111, 115)'">
+                [[slot.row.name]]
+              </div>
+            </a>
+          </template>
+        </el-table-column>
+        <!--
+        <el-table-column label="知识点" width="280">
+          <template v-slot="slot">
+            <el-tag v-for="item,index in slot.row.knowledge" :key="index" :type="knowledge_tag_type[index]">
+            [[ item ]]
+            </el-tag>
+          </template>
+        </el-table-column>
+         -->
+        <el-table-column label="通过率" prop="pass_rate" width="180" align="center"></el-table-column>
+        <el-table-column label="难度" width="160" align="center">
+          <template v-slot="slot">
+              <span v-show="slot.row.difficulty == 0" style="color: #00b7c5">简单</span>
+              <span v-show="slot.row.difficulty == 1" style="color: #ffb800">中等</span>
+              <span v-show="slot.row.difficulty == 2" styl e="color: #ff2d55">困难</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 分页视图 -->
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="queryInfo.pagenum" :page-sizes="[1, 2, 5, 10]" :page-size="queryInfo.pagesize"
+        layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
+    </el-card>
+  </div>
+{% endblock %}
+
+

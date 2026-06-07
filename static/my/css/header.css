@@ -1,0 +1,13 @@
+@charset "UTF-8";
+@font-face {
+  font-family: "UnidreamLED";
+  src: url(../font/UnidreamLED.eot);
+  /***兼容ie9***/
+  src: url(../font/UnidreamLED.eot?#iefix) format("embedded-opentype"), url("../font/UnidreamLED.woff") format("woff"), local("UnidreamLED"), url("../font/UnidreamLED.woff");
+  /***默认使用本地的***/
+}
+h1 {
+  font-family: "UnidreamLED";
+}
+
+/*# sourceMappingURL=header.css.map */

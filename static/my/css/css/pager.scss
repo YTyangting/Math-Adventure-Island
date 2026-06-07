@@ -1,0 +1,47 @@
+.pager {  // 这就是个ul标签
+  list-style: none;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  >li {
+    width: 34px;  //最小宽度, 不满足就会挤出去(上一页下一页)
+    height: 34px;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid #e3e5e7;
+    transition: all 0.3s;
+    //padding: 0 0px;  // padding没用, 还影响宽度计算
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
+    }
+
+    a {
+      // 让a标签填满li标签, 这样鼠标点击整个边框就可以了
+      width: 100%;
+      height: 100%;
+      color: black;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+
+    &:hover {
+      background-color: #e3e5e7;
+    }
+  }
+
+  // 给上一页下一页首页尾页单独设置宽度
+  .page_up, .page_down, .page_first, .page_last {
+      width: 74px;
+    }
+
+  >li.active {
+    background-color: #00aeec;
+    a {
+      color: white;
+    }
+  }
+}

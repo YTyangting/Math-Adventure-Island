@@ -1,0 +1,271 @@
+.card .title {
+  border-radius: 5px 5px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f5f5f5;
+  padding: 20px 20px 10px 20px;
+  background-color: white;
+}
+.card .title h2 {
+  font-size: 20px;
+}
+.card .title > div a {
+  font-size: 14px;
+}
+.card .body {
+  border-radius: 0 0 5px 5px;
+  padding: 10px 20px 20px 20px;
+  background-color: white;
+}
+
+#app {
+  width: 100%;
+}
+#app .main {
+  width: 1200px;
+  min-height: 200px;
+  display: flex;
+  justify-content: space-between;
+}
+#app .main > div > div {
+  margin-bottom: 20px;
+}
+#app .main .left {
+  width: 69%;
+}
+#app .main .left .boutique_article > .title .switch_article_category span {
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+#app .main .left .boutique_article > .title .switch_article_category span:hover {
+  color: #409eff;
+}
+#app .main .left .boutique_article > .title .switch_article_category span[active] {
+  color: #409eff;
+}
+#app .main .left .boutique_article > .body {
+  padding: 0 20px;
+}
+#app .main .left .boutique_article > .body > ul {
+  display: flex;
+  flex-wrap: wrap;
+}
+#app .main .left .boutique_article > .body > ul > li {
+  width: 50%;
+  box-sizing: border-box;
+  display: flex;
+  padding: 10px 0;
+}
+#app .main .left .boutique_article > .body > ul > li:nth-child(1), #app .main .left .boutique_article > .body > ul > li:nth-child(3), #app .main .left .boutique_article > .body > ul > li:nth-child(5) {
+  border-right: 1px solid #f0eeee;
+  padding: 10px 10px 10px 0;
+}
+#app .main .left .boutique_article > .body > ul > li:nth-child(2), #app .main .left .boutique_article > .body > ul > li:nth-child(4), #app .main .left .boutique_article > .body > ul > li:nth-child(6) {
+  padding: 10px 0 10px 10px;
+}
+#app .main .left .boutique_article > .body > ul > li:nth-child(1), #app .main .left .boutique_article > .body > ul > li:nth-child(2), #app .main .left .boutique_article > .body > ul > li:nth-child(3), #app .main .left .boutique_article > .body > ul > li:nth-child(4) {
+  border-bottom: 1px solid #f0eeee;
+}
+#app .main .left .boutique_article > .body > ul > li .left {
+  width: 40%;
+}
+#app .main .left .boutique_article > .body > ul > li .left > div {
+  width: 100%;
+  height: 80px;
+  overflow: hidden;
+}
+#app .main .left .boutique_article > .body > ul > li .left img {
+  width: 100%;
+  transition: all 0.3s;
+}
+#app .main .left .boutique_article > .body > ul > li .left img:hover {
+  transform: scale(1.1);
+}
+#app .main .left .boutique_article > .body > ul > li .right {
+  width: 60%;
+  padding-left: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+#app .main .left .boutique_article > .body > ul > li .right h2 {
+  font-size: 20px;
+}
+#app .main .left .boutique_article > .body > ul > li .right p {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#app .main .left .boutique_article > .body > ul > li .right span {
+  font-size: 14px;
+  color: #555;
+}
+#app .main .left .all_article > .body {
+  background-color: transparent;
+  padding: 0;
+}
+#app .main .left .all_article > .body > ul {
+  width: 100%;
+}
+#app .main .left .all_article > .body > ul > li {
+  width: 100%;
+  display: flex;
+  background-color: white;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+#app .main .left .all_article > .body > ul > li:first-child {
+  border-radius: 0 0 5px 5px;
+}
+#app .main .left .all_article > .body > ul > li:first-child .left {
+  padding: 10px 10px 20px 20px;
+}
+#app .main .left .all_article > .body > ul > li:first-child .right {
+  padding: 10px 20px 20px 10px;
+}
+#app .main .left .all_article > .body > ul > li .category_flag {
+  position: absolute;
+  color: white;
+  top: 9px;
+  right: -79px;
+  width: 200px;
+  height: 20px;
+  font-size: 14px;
+  background-color: #dd6161;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotate(45deg);
+}
+#app .main .left .all_article > .body > ul > li .left {
+  width: 30%;
+  box-sizing: border-box;
+  padding: 20px 10px 20px 20px;
+}
+#app .main .left .all_article > .body > ul > li .left > div {
+  width: 100%;
+  height: 110px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+#app .main .left .all_article > .body > ul > li .left img {
+  width: 100%;
+  transition: all 0.3s;
+}
+#app .main .left .all_article > .body > ul > li .left img:hover {
+  transform: scale(1.1);
+}
+#app .main .left .all_article > .body > ul > li .right {
+  width: 70%;
+  padding: 20px 20px 20px 10px;
+  position: relative;
+}
+#app .main .left .all_article > .body > ul > li .right > h2 {
+  font-size: 23px;
+  margin-bottom: 5px;
+}
+#app .main .left .all_article > .body > ul > li .right > p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
+}
+#app .main .left .all_article > .body > ul > li .right .article_info {
+  font-size: 14px;
+  color: #555;
+}
+#app .main .left .all_article > .body > ul > li .right .article_info > span {
+  margin-right: 10px;
+}
+#app .main .left .all_article > .body > ul > li .right .article_info > span i {
+  margin-right: 5px;
+}
+#app .main .left .all_article > .body > ul > li .right > a {
+  width: 100px;
+  height: 30px;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  background-color: #409eff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+}
+#app .main .right {
+  width: 30%;
+}
+#app .main .right .tags > .body {
+  position: relative;
+}
+#app .main .right .tags > .body ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+@keyframes move_box {
+  0% {
+    left: 0;
+    top: 0;
+  }
+  25% {
+    left: calc(100% - 20px);
+    top: 0;
+  }
+  50% {
+    left: calc(100% - 20px);
+    top: calc(100% - 20px);
+  }
+  70% {
+    left: 0;
+    top: calc(100% - 20px);
+  }
+  100% {
+    left: 0;
+    top: 0;
+  }
+}
+#app .main .right .tags > .body ul::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 20px;
+  height: 20px;
+  content: "";
+  background-color: #409eff;
+  -webkit-animation-name: move_box;
+  animation-name: move_box;
+  -webkit-animation-duration: 5s;
+  animation-duration: 5s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+#app .main .right .tags > .body ul li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 33.33%;
+  box-sizing: border-box;
+  height: 40px;
+}
+#app .main .right .tags > .body ul li:nth-child(6n+1), #app .main .right .tags > .body ul li:nth-child(6n+2), #app .main .right .tags > .body ul li:nth-child(6n+3) {
+  background-color: #f5f5f5;
+}
+#app .main .right .tags > .body ul li:nth-child(3n+1), #app .main .right .tags > .body ul li:nth-child(3n+2) {
+  border-right: 1px solid #f0eeee;
+}
+
+/*# sourceMappingURL=index.css.map */

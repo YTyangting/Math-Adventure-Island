@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+        <title>平台|用户登录</title>
+    {% endblock %}
+    <link rel="stylesheet" href="/static/my/css/login.css">
+    <link rel="stylesheet" href="/static/my/css/reset.css">
+    <!-- 引入element ui样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <main>
+        <div class="container">
+        <div class="from-box">
+            <!-- 获取django安全验证token -->
+            {% csrf_token %}
+            <!-- 注册 -->
+            <div class="register-box hidden">
+                <h1>register</h1>
+                <input type="text" ref="sign_form_name" v-model="sign_form.name" placeholder="用户名">
+                <input type="password" ref="sign_form_pwd" v-model="sign_form.pwd" placeholder="密码">
+                <input type="password" ref="sign_form_re_pwd" v-model="sign_form.re_pwd" placeholder="确认密码">
+                <button @click="sign">注册</button>
+            </div>
+            <!-- 登录 -->
+            <div class="login-box">
+                <h1>login</h1>
+                <input type="text" ref="login_form_name" v-model="login_form.name" placeholder="用户名">
+                <label>
+                    <input type="password" ref="login_form_pwd" v-model="login_form.pwd" placeholder="密码">
+                </label>
+                <button @click="login">登录</button>
+            </div>
+        </div>
+        <div class="con-box left">
+            <h2>欢迎来到<span>智能教育平台</span></h2>
+            <p>开启你的<span>自学之旅</span>吧</p>
+            <img src="/static/my/img/login/pen.jfif" alt="">
+            <p>已有账号</p>
+            <button id="login">去登录</button>
+        </div>
+        <div class="con-box right">
+            <h2>欢迎来到<span>智能教育平台</span></h2>
+            <p>开启你的<span>求知之旅</span>吧</p>
+            <img src="/static/my/img/login/puple.png" alt="">
+            <p>没有账号?</p>
+            <button id="register">去注册</button>
+        </div>
+    </div>
+    </main>
+</div>
+
+<script src="/static/axios/axios.min.js"></script>
+<script src="/static/vue/vue.js"></script>
+<!-- 引入element ui组件库, 一定要放到vue下面 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+    // axios的请求前拦截器, 或者说中间件
+    axios.interceptors.request.use(request => {
+        {#console.log(request)#}
+        if (request.method === 'post'){
+            // 首先获取name为csrfmiddlewaretoken的input,
+            // 就是上面html代码的这个{ % csrf_token % }',
+            // 然后获取其value值, 即token值
+            let csrftoken = document.querySelector('input[name="csrfmiddlewaretoken"]').value
+            // 把token存入session, 免得其他地方请求还有获取令牌
+            window.sessionStorage.setItem('token', csrftoken)
+            {#console.log(csrftoken)#}
+            // 最后在每次post请求时, 在请求头加上这个csrftoken
+            request.headers['X-CSRFToken'] = csrftoken
+        }
+        return request  // 最后一定要返回, 把请求发出去
+    })
+    // axios的响应中间件
+    axios.interceptors.response.use(response => {
+        // 这里直接返回data, 就不用在下面axios里处理response, 直接得到data了
+        return response.data
+    })
+
+    new Vue({
+        el: '#app',
+        data: {
+            login_form:{
+                name: 'admin',
+                pwd: '123',
+                code: '123',
+            },
+            sign_form:{
+                name: 'admin',
+                pwd: '123',
+                re_pwd: '123',
+                code: '123',
+            },
+            {#code_img_src: '/static/my/img/login/code.png'#}
+        },
+        methods: {
+            login() {
+                {#console.log(this.login_form)#}
+                // 注意一下这里的请求后台地址, 需要两个斜杠/
+                axios.post('/api/login/', this.login_form).then(res=>{
+                    {#console.log(res)#}
+                    if (res.code !== 0){
+                        // 验证失败
+                        this.$message.error(res.msg)
+                        // 使用vue的ref获取dom元素, 使用反引号, tab键上面那个
+                        // 注意要在上面的html代码的input里加上ref
+                        // 让它获取焦点, 并清空内容
+                        this.$refs[`login_form_${res.self}`].focus()
+                        this.$refs[`login_form_${res.self}`].value = ''
+                        return
+                    }
+                    this.$message.success(res.msg)
+                    // 登陆成功, 一秒钟后自动跳转回首页
+                    setTimeout(()=>{
+                        // 判断一下, 如果当前用户没有testRecord, 跳转Welcome
+                        axios.get('/api/testRecords/?type=count').then(res=>{
+                             if (res.code !== 200){
+                                 return this.$message.error(res.msg)
+                             }
+                             if (res.data === 0){ // 没有测验记录
+                                  location.href = '/welcome/'
+                             }else{
+                                  location.href = '/dl_index/'
+                             }
+                        })
+                    }, 500)
+                })
+            },
+            sign() {
+                // 注意一下这里的请求后台地址, 需要两个斜杠/
+                axios.post('/api/sign/', this.sign_form).then(res=>{
+                    console.log(res)
+                    if (res.code !== 0){
+                        // 验证失败
+                        this.$message.error(res.msg)
+                        this.$refs[`sign_form_${res.self}`].focus()
+                        this.$refs[`sign_form_${res.self}`].value = ''
+                        return
+                    }
+                    this.$message.success(res.msg)
+                    // 注册成功(首次登录), 一秒钟后自动跳转到欢迎页面
+                    setTimeout(()=>{
+                        location.href = '/welcome/'
+                    }, 500)
+                })
+            },
+            // 实现点击获取验证码图片
+            get_random_code(e) {
+                {#console.log(e.target.src)#}
+                // this.code_img_src = '/login/random_code/' 这种方法不行, 一直赋一样的值不起作用
+                // 一直请求服务器也不好, 通过获取时间戳在后端验证获取间隔
+                let date = new Date().getTime()
+                e.target.src = '/login/random_code/?timestamp=' + date  // 需要直接更改img元素的src值
+            }
+        }
+    })
+
+    //要操作到的元素
+    let login = document.getElementById("login");
+    let register = document.getElementById("register");
+    let form_box = document.getElementsByClassName("from-box")[0];
+    let register_box = document.getElementsByClassName("register-box")[0];
+    let login_box = document.getElementsByClassName("login-box")[0];
+    //点击去注册按钮点击事件
+    register.addEventListener('click',()=>{
+        form_box.style.transform='translateX(80%)';
+        login_box.classList.add('hidden');
+        register_box.classList.remove('hidden');
+    })
+    //点击去登录按钮点击事件
+    login.addEventListener('click',()=>{
+        form_box.style.transform='translateX(0%)';
+        register_box.classList.add('hidden');
+        login_box.classList.remove('hidden');
+    })
+</script>
+
+</body>
+</html>

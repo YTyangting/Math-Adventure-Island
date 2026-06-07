@@ -1,0 +1,175 @@
+{% extends 'dl_index.html' %}
+
+{# 导入自定义标签, 页面等等 #}
+{% load my_tag %}
+
+{% block css %}
+    <!-- editor-md样式, 保证在article.css上面 -->
+    <link rel="stylesheet" href="/static/my/css/report.css">
+{% endblock %}
+
+{% block banner %}
+    {% banner 'report' %}
+{% endblock %}
+
+{% block main %}
+    <div class="report">
+        <div class="report_top">
+            <div class="left">
+                <div class="title">
+                    <h2>知识点掌握情况</h2>
+                    <el-tooltip placement="top" effect="light">
+                      <div slot="content" v-cloak>
+                          本图展示的是用户当前知识点掌握情况(范围为0-1),<br/>
+                          以及某个知识点掌握情况在所有知识点中的占比
+                      </div>
+                    </el-tooltip>
+                    <!--
+                    <span title="本图展示的是用户当前知识点掌握情况(范围为0-1), 以及某个知识点掌握情况在所有知识点中的占比">说明</span>
+                    -->
+                  </div>
+                <div class="content">
+                    <div id="test_concept_pie_charts_option" style="width: 620px;height:400px;"></div>
+                </div>
+            </div>
+            <div class="right">
+                <h2>测验评价</h2>
+                <!-- 由于VUE插值不能很好的显示HTML, 因此直接在app01的views.py里获取 -->
+                <!--<div  v-html="prob_word_data"></div >-->
+                <div class="content">
+                    {{ prob_word_data|safe }}
+                </div>
+            </div>
+        </div>
+        <div class="report_center">
+            <div class="left">
+                <h2>能力预测</h2>
+                <div class="content">
+                    <!-- 根据您过往的做题记录, 现生成了三套模拟测试卷, 并给出了预测得分:  -->
+                    <p>
+                    根据您之前的做题记录和对本课程所有知识点的掌握情况，
+                    系统自动生成了一张测试卷并预估了您的成绩，
+                    方便您及时调整学习策略。
+                    试卷出题规则如下：每一个知识点都会随机出两道题，共计{{ p2ts_count }}题，总分100分。</p>
+                    <div class="simulation_test">
+                        <p><a href="/simulation/?type=1">模拟测试卷一</a></p>
+                        <p><a href="/simulation/?type=1"><span>预测得分为</span></a></p>
+                        <p><span>{{ simulation_score }}</span></p>
+                        <!--<p><a href="/simulation/?type=2">模拟测试卷二,&nbsp;预测得分为: <span>85</span></a></p>
+                        <p><a href="/simulation/?type=3">模拟测试卷三,&nbsp;预测得分为: <span>85</span></a></p>-->
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="title">
+                    <h2>测试前后知识点变化</h2>
+                    <el-tooltip placement="top" effect="light">
+                      <div slot="content" v-cloak>
+                          本图展示的是测试前后用户知识点掌握情况变化,<br/>
+                          蓝色为当前知识点掌握情况, 绿色为上一次掌握情况
+                      </div>
+                      <span>说明</span>
+                    </el-tooltip>
+                </div>
+                <div class="test_concept_radar_charts_option">
+                    <div id="test_concept_radar_charts_option" style="width: 600px;height:400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="report_bottom">
+            <div class="title">
+                <h2>推荐题目</h2>
+            </div>
+            <div class="content">
+                <div class="left">
+                    <ul>
+                        {% for weakness_a_html in weakness_a_html_list %}
+                            {{ weakness_a_html|safe }}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="right">
+                    <ul>
+                        {% for improve_a_html in improve_a_html_list %}
+                            {{ improve_a_html|safe }}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <h1 class="weakness">
+                <span>补</span>
+                <span>弱</span>
+            </h1>
+            <h1 class="improve">
+                <span>提</span>
+                <span>高</span>
+            </h1>
+            <div class="divide_line"></div>
+        </div>
+        <div class="report_chart_prob">
+            <div class="left">
+                <div class="title">
+                    <h2>做题情况</h2>
+                    <el-tooltip placement="top" effect="light">
+                      <div slot="content" v-cloak>
+                          本图内部饼图展示的是题库所有题目难度占比,<br/>
+                          本图外部饼图展示的是用户所做题目难度占比
+                      </div>
+                      <span>说明</span>
+                    </el-tooltip>
+                </div>
+                <div class="content">
+                    <div id="user_prob_pie_charts_option" style="width: 700px;height:525px;"></div>
+                </div>
+            </div>
+            <div class="divide_line"></div>
+            <div class="right">
+                <div class="title">
+                    <h2>单个知识点做题情况</h2>
+                    <el-tooltip placement="top" effect="light">
+                      <div slot="content" v-cloak>
+                          本图展示的是用户单个知识点做题情况
+                      </div>
+                      <span>说明</span>
+                    </el-tooltip>
+                </div>
+                <div class="content">
+                    <div class="dropdown_menu" v-cloak>
+                        <template>
+                          <el-select
+                            v-model="report_select_value"
+                            filterable
+                            placeholder="请选择"
+                            @change="reportConceptSelectChange">
+                            <el-option
+                              v-for="item in report_select_options"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                          </el-select>
+                        </template>
+                    </div>
+                    <div id="user_prob_polar_charts_option" style="width: 700px;height:525px;"></div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="report_top_chart">
+            <div id="user_prob_polar_charts_option" style="width: 850px;height:600px;"></div>
+        </div>-->
+        <div class="report_chart_concept">
+            <div class="title">
+                <h2>知识点掌握情况随时间变化</h2>
+                <el-tooltip placement="top" effect="light">
+                  <div slot="content" v-cloak>
+                      本图展示的是用户知识点掌握情况随时间的变化
+                  </div>
+                  <span>说明</span>
+                </el-tooltip>
+            </div>
+            <div class="content">
+                <div id="user_concept_line_charts_option" style="width: 1250px;height:600px;"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

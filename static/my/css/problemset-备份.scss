@@ -1,0 +1,125 @@
+@import "./pager";
+
+.main {
+  width: calc(70% - 40px);
+  padding: 20px;
+  .title {
+    background-color: white;
+    border-radius: 5px 5px 0 0;
+    //margin-bottom: 20px;
+    padding: 10px 20px;
+    border-bottom: 1px solid #f5f5f5;
+    display: flex;
+    justify-content: space-between;
+      h2 {
+        font-size: 30px;
+        font-weight: 400;
+        color: black;
+      }
+  }
+
+  .body {
+    .problem_content_ul {
+      list-style: none;
+      background-color: transparent;
+      >li {
+        background-color: white;
+        margin-bottom: 10px;
+        padding: 10px 20px;
+
+        .right {
+          >h2>a {
+            font-size: 20px;
+            font-weight: 400;
+            color: black;
+            &:hover {
+              color: #409eff;
+            }
+          }
+
+          .prob_tag {
+            margin-top: 10px;
+            margin-bottom: 10px;
+          }
+          .prob_info {
+            display: flex;
+            span {
+              margin-right: 15px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.el-card__body {
+  width: 1200px;
+}
+
+.el-table {
+  margin-top: 15px;
+  font-size: 15px;
+}
+
+.el-pagination {
+  margin-top: 15px;
+}
+
+.el-tag {
+  margin-right: 10px;
+}
+
+
+//.problemset {
+//  width: calc(70% - 80px);
+//  min-height: 600px;
+//  background-color: white;
+//  padding: 30px 40px;
+//  border-radius: 5px;
+//  display: flex;
+//  flex-direction: column;
+//
+//  .title {
+//    margin-bottom: 20px;
+//    padding: 0 0 10px 0;
+//    border-bottom: 1px solid #f5f5f5;
+//    //>div {
+//    //  width: 130px;
+//    //  height: 40px;
+//    //  background-color: #333333;
+//    //  display: flex;
+//    //  align-items: center;
+//    //  justify-content: center;
+//    //  border-radius: 20px;
+//      h2 {
+//        font-size: 22px;
+//        font-weight: 400;
+//        color: black;
+//      }
+//    //}
+//  }
+//
+//  .search {
+//    display: flex;
+//    flex-direction: row;
+//    margin-bottom: 20px;
+//  }
+//
+//  .table {
+//    border-bottom: 1px solid #f5f5f5;
+//  }
+//
+//  //.el-input--suffix .el-input__inner {
+//  //  width: 80px;
+//  //  //height: 32px;
+//  //  //border: none;
+//  //  //background-color: #f2f3f4;
+//  //  //color: #595959;
+//  //  //font-size: 15px;
+//  //  margin-right: 10px;
+//  //}
+//  .input-with-select {
+//    width: 382px;
+//  }
+//}

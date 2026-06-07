@@ -1,0 +1,34 @@
+{% extends 'test.html' %}
+
+{% block css %}
+    <!-- editor-md样式, 保证在article.css上面 -->
+    <link rel="stylesheet" href="/static/my/css/problem.css">
+    <!-- 主要是引入pager样式 -->
+    <link rel="stylesheet" href="/static/my/css/test.css">
+    <link rel="stylesheet" href="/static/my/css/simulation.css">
+{% endblock %}
+
+{% block timer %}
+    <div class="show_time card" v-cloak>
+                        <div class="hexo_electric_clock">
+                          <div class="clock-row">
+                            <span id="card-clock-clockdate" class="card-clock-clockdate">2022-07-17</span>
+                              <span class="card-clock-weather">[[ clockCardInfo.whether ]]</span>
+                              <span id="card-clock-temperature" v-cloak>[[ clockCardInfo.temperature ]]</span>
+                            <!--<span class="card-clock-humidity">☀️💧 [[ clockCardInfo.humidity ]]</span>-->
+                          </div>
+                          <div class="clock-row">
+                              <div class="card-clock-time">
+                                  <span id="card-clock-time">18:48:06</span>
+                              </div>
+                          </div>
+                          <div class="clock-row">
+                            <span class="card-clock-ip">[[ clockCardInfo.ip ]]</span>
+                            <span class="card-clock-location">[[ clockCardInfo.location ]]</span>
+                            <span id="card-clock-darkorlight" class="card-clock-darkorlight">
+                                PM
+                            </span>
+                          </div>
+                        </div>
+                    </div>
+{% endblock %}

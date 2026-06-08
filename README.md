@@ -24,8 +24,8 @@
 
 本项目采用前后端分离的架构设计，确保系统的高可用性和易扩展性：
 
-* **前端 (Frontend)**: Vue 3 / React, TailwindCSS, ECharts (用于数据可视化)
-* **后端 (Backend)**: Java Spring Boot / Python Django/FastAPI (负责 AI 模型推理和核心业务逻辑)
+* **前端 (Frontend)**: Vue 3, TailwindCSS, ECharts (用于数据可视化)
+* **后端 (Backend)**: Python Django (负责 AI 模型推理和核心业务逻辑)
 * **数据库 (Database)**: MySQL (业务数据), Redis (缓存与排行榜)
 * **AI 与算法**: PyTorch (知识追踪模型), 接入大语言模型 API (如文心一言/通义千问/ChatGPT)
 

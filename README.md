@@ -95,10 +95,13 @@ Math-Adventure-Island/
 5. 发起一个 Pull Request
 6. 
 ## Demo Video
+```text
 Math-Adventure-Island/
 ├── frontend/ 
     ├──media/
        ├──demo.mp4
+
+```
 ## ✉️ 联系方式 (Contact)
 
 项目负责人：[ting yang]
